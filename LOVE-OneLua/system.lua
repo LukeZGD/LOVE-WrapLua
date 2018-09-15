@@ -1,3 +1,7 @@
 function love.system.getOS()
-	return "Vita"
+	if isPSP then
+		return "PSP"
+	else
+		return "Vita"
+	end
 end

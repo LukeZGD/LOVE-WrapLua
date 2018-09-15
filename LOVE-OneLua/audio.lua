@@ -21,5 +21,5 @@ function love.audio.play(source)
 end
 
 function love.audio.stop(source)
-	--sound.stop(source.loadsound)
+	sound.stop(source.loadsound)
 end

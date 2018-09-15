@@ -1,9 +1,10 @@
 --some info
+isPSP = os.cfw()
 appmode = "TEST"
 appname = "testrun"
 dataloc = ""
 
-if appmode == "TEST" then
+if appmode == "TEST" and not isPSP then
 	dataloc = "ux0:/data/"..appname.."/"
 end	
 

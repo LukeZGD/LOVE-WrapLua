@@ -1,8 +1,12 @@
 local sec = 0
 
 function love.load()
-	imagee = love.graphics.newImage("image.png")
-	audioe = love.audio.newSource("audio.ogg")
+	if love.system.getOS() == "PSP" then
+		imagee = love.graphics.newImage("imagePSP.png")
+	else
+		imagee = love.graphics.newImage("image.png")
+	end
+	audioe = love.audio.newSource("audio.mp3")
 	audioe:setLooping(true)
 	audioe:play()
 end
