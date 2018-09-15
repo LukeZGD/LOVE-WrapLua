@@ -75,6 +75,9 @@ function love.graphics.setBackgroundColor(r,g,b)
 end
 
 function love.graphics.rectangle(mode, x, y, w, h)
+	--scale 1280x720 to 960x540
+	--x = x * 0.75; y = y * 0.75; w = w * 0.75; h = h * 0.75
+	
 	if mode == "fill" then
 		draw.fillrect(x, y, w, h, current.color)
 	elseif mode == "line" then
