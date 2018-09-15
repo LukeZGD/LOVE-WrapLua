@@ -1,5 +1,5 @@
 --some info
-isPSP = os.cfw()
+isPSP = os.cfw
 appmode = "TEST"
 appname = "testrun"
 dataloc = ""
