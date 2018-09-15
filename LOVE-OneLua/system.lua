@@ -5,3 +5,11 @@ function love.system.getOS()
 		return "Vita"
 	end
 end
+
+function love.system.getLanguage()
+	return os.language()
+end
+
+function love.system.getUsername()
+	return os.nick()
+end

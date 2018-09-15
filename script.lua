@@ -16,6 +16,7 @@ love.event = {}
 love.math = {}
 love.system = {}
 love.filesystem = {}
+love.keyboard = {}
 
 --modules and stuff
 dofile(dataloc.."LOVE-OneLua/graphics.lua")
@@ -25,6 +26,7 @@ dofile(dataloc.."LOVE-OneLua/event.lua")
 dofile(dataloc.."LOVE-OneLua/math.lua")
 dofile(dataloc.."LOVE-OneLua/system.lua")
 dofile(dataloc.."LOVE-OneLua/filesystem.lua")
+dofile(dataloc.."LOVE-OneLua/keyboard.lua")
 
 function love.getVersion()
 	return 0, 10, 2
