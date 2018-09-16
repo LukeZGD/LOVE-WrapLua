@@ -3,10 +3,19 @@ isPSP = os.cfw
 appmode = "TEST"
 appname = "testrun"
 dataloc = ""
+local keyconfigset = "PS"
 
 if appmode == "TEST" and not isPSP then
 	dataloc = "ux0:/data/"..appname.."/"
-end	
+end
+
+if keyconfigset == "PS" then
+	keyconfig = {"square","cross","triangle","square","l","r"}
+elseif keyconfigset == "Nintendo" then
+	keyconfig = {"a","b","x","y","lbutton","rbutton"}
+elseif keyconfigset == "XB" then
+	keyconfig = {"b","a","y","x","l","r"}
+end
 
 love = {}
 love.graphics = {}
@@ -82,24 +91,32 @@ while true do
 	buttons.read()
 	for i=1,#mask do
 		if buttons[mask[i]] and mask[i] == "circle" then
-			love.keypressed("a")
+			love.keypressed(keyconfig[1])
 		elseif buttons[mask[i]] and mask[i] == "cross" then
-			love.keypressed("b")
+			love.keypressed(keyconfig[2])
 		elseif buttons[mask[i]] and mask[i] == "triangle" then
-			love.keypressed("x")
+			love.keypressed(keyconfig[3])
 		elseif buttons[mask[i]] and mask[i] == "square" then
-			love.keypressed("y")
+			love.keypressed(keyconfig[4])
+		elseif buttons[mask[i]] and mask[i] == "l" then
+			love.keypressed(keyconfig[5])
+		elseif buttons[mask[i]] and mask[i] == "r" then
+			love.keypressed(keyconfig[6])
 		elseif buttons[mask[i]] then
 			love.keypressed(mask[i])
 		end
 		if buttons.released[mask[i]] and mask[i] == "circle" then
-			love.keyreleased("a")
+			love.keyreleased(keyconfig[1])
 		elseif buttons.released[mask[i]] and mask[i] == "cross" then
-			love.keyreleased("b")
+			love.keyreleased(keyconfig[2])
 		elseif buttons.released[mask[i]] and mask[i] == "triangle" then
-			love.keyreleased("x")
+			love.keyreleased(keyconfig[3])
 		elseif buttons.released[mask[i]] and mask[i] == "square" then
-			love.keyreleased("y")
+			love.keyreleased(keyconfig[4])
+		elseif buttons.released[mask[i]] and mask[i] == "l" then
+			love.keyreleased(keyconfig[5])
+		elseif buttons.released[mask[i]] and mask[i] == "r" then
+			love.keyreleased(keyconfig[6])
 		elseif buttons.released[mask[i]] then
 			love.keyreleased(mask[i])
 		end

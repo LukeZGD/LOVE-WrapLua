@@ -38,6 +38,15 @@
 - love.system.getLanguage
 - love.system.getUsername
 
+## love.filesystem
+- love.filesystem.read
+- love.filesystem.write
+- love.filesystem.isFile
+- love.filesystem.getInfo (same as isFile)
+
+## love.math
+- love.math.random (same as math.random)
+- love.math.setRandomSeed (same as math.randomseed)
 
 ## love.audio
 - love.audio.newSource 

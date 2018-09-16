@@ -1,12 +1,16 @@
 function love.keyboard.isDown(key)
-	if key == "a" then
+	if key == keyconfig[1] then
 		key = "circle"
-	elseif key == "b" then
+	elseif key == keyconfig[2] then
 		key = "cross"
-	elseif key == "x" then
+	elseif key == keyconfig[3] then
 		key = "triangle"
-	elseif key == "y" then
+	elseif key == keyconfig[4] then
 		key = "square"
+	elseif key == keyconfig[5] then
+		key = "l"
+	elseif key == keyconfig[6] then
+		key = "r"
 	end
 	if buttons.held[key] then
 		return true
