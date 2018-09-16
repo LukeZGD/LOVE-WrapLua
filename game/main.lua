@@ -9,6 +9,7 @@ function love.load()
 	audioe = love.audio.newSource("audio.mp3")
 	audioe:setLooping(true)
 	audioe:play()
+	love.filesystem.write("persistent","persistent")
 end
 
 function love.draw()

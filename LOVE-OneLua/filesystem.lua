@@ -6,21 +6,29 @@ function love.filesystem.read(file)
 		local contents = openfile:read()
 		io.close(openfile)
 		return contents
+	else
+		return data.load(file,1)	
 	end
 end
 
-function love.filesystem.write(file,data)
+function love.filesystem.write(file,datawrite)
 	if not isPSP then
 		local openfile = io.open(saveloc..file, "w+")
-		openfile:write(data)
+		openfile:write(datawrite)
 		io.close(openfile)
+	else
+		data.save(datawrite,appname,file,file,"",1,"ICONOS/")
 	end
 end
 
 function love.filesystem.isFile(file)
-	return files.exists(saveloc..file)
+	if not isPSP then
+		return files.exists(saveloc..file)
+	else
+		return data.load(file,1)
+	end
 end
 
 function love.filesystem.getInfo(file)
-	return files.exists(saveloc..file)
+	return love.filesystem.isFile(file)
 end
