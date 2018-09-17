@@ -6,10 +6,9 @@ function love.load()
 	else
 		imagee = love.graphics.newImage("image.png")
 	end
-	audioe = love.audio.newSource("audio.mp3")
+	audioe = love.audio.newSource("audio.mp3","stream")
 	audioe:setLooping(true)
 	audioe:play()
-	love.filesystem.write("persistent","persistent")
 end
 
 function love.draw()

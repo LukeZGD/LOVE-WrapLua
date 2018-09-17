@@ -1,4 +1,7 @@
 local saveloc = "ux0:/data/"..appname.."/savedata/"
+if not isPSP and not files.exists(saveloc) then
+	files.mkdir(saveloc)
+end
 
 function love.filesystem.read(file)
 	if not isPSP then
@@ -18,6 +21,14 @@ function love.filesystem.write(file,datawrite)
 		io.close(openfile)
 	else
 		data.save(datawrite,appname,file,file,"",1,"ICONOS/")
+	end
+end
+
+function love.filesystem.remove(file)
+	if not isPSP then
+		files.delete(saveloc..file)
+	else
+		data.delete(file)
 	end
 end
 

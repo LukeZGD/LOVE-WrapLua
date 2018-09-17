@@ -3,7 +3,7 @@ isPSP = os.cfw
 appmode = "TEST"
 appname = "testrun"
 dataloc = ""
-local keyconfigset = "PS"
+local keyconfigset = "XB"
 
 if appmode == "TEST" and not isPSP then
 	dataloc = "ux0:/data/"..appname.."/"
