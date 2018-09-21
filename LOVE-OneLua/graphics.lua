@@ -4,7 +4,7 @@ if not isPSP then
 	defaultfont = {font=font.load(dataloc.."LOVE-OneLua/Vera.ttf"),size=12}
 	font.setdefault(defaultfont.font)
 else
-	defaultfont = {font=font.load(dataloc.."LOVE-OneLua/oneFont.pgf"),size=12}
+	defaultfont = {font=font.load("oneFont.pgf"),size=12}
 	font.setdefault(defaultfont.font)
 end
 
