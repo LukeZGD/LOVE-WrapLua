@@ -19,9 +19,9 @@ function love.keyboard.isDown(key)
 	end
 end
 
-function love.keyboard.setTextInput(boo)
-	if boo then
+function love.keyboard.setTextInput(enable)
+	if enable then
 		local text = osk.init("","")
-		if text and love.textinput then love.textinput(text) end
+		if text and text ~= "" then love.textinput(text) end
 	end
 end

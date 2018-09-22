@@ -25,7 +25,7 @@ function love.graphics.draw(drawable,x,y)
 	if not y then y = 0 end
 	
 	--scale 1280x720 to 960x540 (vita)
-	x = x * 0.75; y = y * 0.75
+	--x = x * 0.75; y = y * 0.75
 	
 	if drawable then image.blit(drawable,x,y,color.a(current.color)) end
 end

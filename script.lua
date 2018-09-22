@@ -13,8 +13,26 @@ if keyconfigset == "PS" then
 	keyconfig = {"square","cross","triangle","square","l","r"}
 elseif keyconfigset == "Nintendo" then
 	keyconfig = {"a","b","x","y","lbutton","rbutton"}
+	--[[
+	Nintendo Key Config
+	a = circle
+	b = cross
+	x = triangle
+	y = square
+	lbutton = l trigger
+	rbutton = r trigger
+	]]
 elseif keyconfigset == "XB" then
-	keyconfig = {"b","a","y","x","l","r"}
+	keyconfig = {"b","a","y","x","lbutton","rbutton"}
+	--[[
+	Xbox Controller Key Config
+	b = circle
+	a = cross
+	y = triangle
+	x = square
+	lbutton = l trigger
+	rbutton = r trigger
+	]]
 end
 
 love = {}
