@@ -42,6 +42,7 @@
 - love.filesystem.read
 - love.filesystem.write
 - love.filesystem.remove
+- love.filesystem.load
 - love.filesystem.isFile
 - love.filesystem.getInfo (same as isFile)
 

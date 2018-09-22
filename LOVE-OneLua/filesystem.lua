@@ -32,6 +32,12 @@ function love.filesystem.remove(file)
 	end
 end
 
+function love.filesystem.load(file)
+	if not isPSP then
+		dofile(saveloc..file)
+	end
+end
+
 function love.filesystem.isFile(file)
 	if not isPSP then
 		return files.exists(saveloc..file)
