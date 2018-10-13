@@ -1,6 +1,6 @@
 local saveloc = "ux0:/data/"..appname.."/savedata/"
 if isPSP then
-	saveloc = "ms0:/"..appname.."/savedata/"
+	saveloc = "ms0:/data/"..appname.."/savedata/"
 end
 
 if not files.exists(saveloc) then
