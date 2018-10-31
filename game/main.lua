@@ -1,29 +1,43 @@
-local sec = 0
-local textdisp = ""
+local sectimer = 0
+local pos = 0
+local lg = love.graphics
+
+local lgsetColor = lg.setColor
+function lg.setColor(...)
+	local args = {...}
+	local ver = love.getVersion()
+	if ver >= 11 then
+		for i = 1, #args do
+			if args[i] > 0 then
+				args[i] = args[i] / 255
+			end
+		end
+	end
+	lgsetColor(args[1],args[2],args[3],args[4])
+end
 
 function love.load()
-	if love.system.getOS() == "PSP" then
-		imagee = love.graphics.newImage("imagePSP.png")
-	else
-		imagee = love.graphics.newImage("image.png")
-	end
-	audioe = love.audio.newSource("audio.mp3","stream")
-	audioe:setLooping(true)
-	audioe:play()
-	love.keyboard.setTextInput(true)
+	image = lg.newImage("image.png")
+	local def = lg.newFont(24)
+	lg.setFont(def)
 end
 
 function love.draw()
-	love.graphics.draw(imagee)
-	love.graphics.print("Hello World")
-	love.graphics.print(sec,0,30)
-	love.graphics.print("Text Input: "..textdisp,0,60)
+	lg.draw(image, pos, pos)
+	lg.setColor(128,128,128,128)
+	lg.rectangle("fill",40,40,130,35)
+	lg.setColor(255,255,255,255)
+	if sectimer <= 1 then
+		lg.print("No game!",44,42)
+	end
 end
 
 function love.update(dt)
-	sec = sec + dt
-end
-
-function love.textinput(text)
-	textdisp = text
+	sectimer = sectimer + dt
+	if sectimer >= 2 then sectimer = 0 end
+	
+	pos = pos - 0.625
+	if pos <= -200 then
+		pos = -50
+	end
 end

@@ -1,5 +1,8 @@
 function love.event.quit(re)
-	if love.quit then love.quit() end
+	if love.quit then
+		love.quit()
+	end
+	
 	if re == "restart" then
 		os.restart()
 	else

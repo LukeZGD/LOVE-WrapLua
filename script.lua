@@ -1,7 +1,7 @@
 --some info
 isPSP = os.cfw
-appmode = "TEST"
-appname = "testrun"
+appmode = ""
+appname = "LOVE-OneLua"
 dataloc = ""
 local keyconfigset = "XB"
 
@@ -10,7 +10,7 @@ if appmode == "TEST" and not isPSP then
 end
 
 if keyconfigset == "PS" then
-	keyconfig = {"square","cross","triangle","square","l","r"}
+	keyconfig = {"circle","cross","triangle","square","l","r"}
 elseif keyconfigset == "Nintendo" then
 	keyconfig = {"a","b","x","y","lbutton","rbutton"}
 	--[[
@@ -55,6 +55,7 @@ dofile(dataloc.."LOVE-OneLua/system.lua")
 dofile(dataloc.."LOVE-OneLua/filesystem.lua")
 dofile(dataloc.."LOVE-OneLua/keyboard.lua")
 
+--return LOVE 0.10.2
 function love.getVersion()
 	return 0, 10, 2
 end
@@ -64,7 +65,6 @@ function require(param)
 	if string.sub(param, -4) == ".lua" then
 		param = dataloc.."game/"..param
 	else
-		--param = string.gsub(param, "/.", "//")
 		param = dataloc.."game/"..param..".lua"
 	end
 	dofile(param)
@@ -72,11 +72,13 @@ end
 
 --START!
 dofile(dataloc.."game/main.lua")
-love.load()
+if love.load then
+	love.load()
+end
 
 --gamepadpressed or keypressed stuff
-local joy = nil
 local mask = {"up", "down", "left", "right", "cross", "circle", "square", "triangle", "r", "l", "start", "select"}
+
 if not love.keypressed and love.gamepadpressed then
 	function love.keypressed(key)
 		love.gamepadpressed(joy,button)
@@ -84,6 +86,7 @@ if not love.keypressed and love.gamepadpressed then
 elseif not love.keypressed then
 	love.keypressed = function() end
 end
+
 if not love.keyreleased and love.gamepadreleased then
 	function love.keyreleased(key)
 		love.gamepadreleased(joy,button)
@@ -95,13 +98,17 @@ end
 --Main loop
 while true do
 	--Draw
-	love.draw()
+	if love.draw then
+		love.draw()
+	end
 	screen.flip()
 	
 	--Update
-	if tmr:time() >= 16 then
+	if tmr:time() >= 16.67 then
 		dt = tmr:time() / 1000
-		love.update(dt)
+		if love.update then
+			love.update(dt)
+		end
 		tmr:reset(); tmr:start()
 	end
 	

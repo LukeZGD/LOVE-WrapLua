@@ -28,7 +28,9 @@ function love.graphics.draw(drawable,x,y)
 	--x = x * 0.75; y = y * 0.75
 	--x = x * 0.375; y = y * 0.375
 	
-	if drawable then image.blit(drawable,x,y,color.a(current.color)) end
+	if drawable then
+		image.blit(drawable,x,y,color.a(current.color))
+	end
 end
 
 function love.graphics.newFont(setfont, setsize)
@@ -37,7 +39,10 @@ function love.graphics.newFont(setfont, setsize)
 	else
 		setfont = defaultfont
 	end
-	if not setsize then setsize = 12 end
+	
+	if not setsize then
+		setsize = 12
+	end
 		
 	local table = {
 		font = setfont;
@@ -52,6 +57,7 @@ function love.graphics.setFont(setfont,setsize)
 	else
 		current.font = defaultfont
 	end
+	
 	if setsize then
 		current.font.size = setsize
 	end
@@ -68,7 +74,9 @@ function love.graphics.print(text,x,y)
 	--x = x * 0.375; y = y * 0.375
 	--fontsize = fontsize*0.6
 	
-	if text then screen.print(current.font.font,x,y,text,fontsize,current.color) end
+	if text then
+		screen.print(current.font.font,x,y,text,fontsize,current.color)
+	end
 end
 
 function love.graphics.setColor(r,g,b,a)
@@ -91,3 +99,12 @@ function love.graphics.rectangle(mode, x, y, w, h)
 		draw.rect(x, y, w, h, current.color)
 	end
 end
+
+function love.graphics.line(x1,y1,x2,y2)
+	draw.line(x1,y1,x2,y2,current.color)
+end
+
+function love.graphics.circle(x,y,radius)
+	draw.circle(x,y,radius,current.color,30)
+end
+	

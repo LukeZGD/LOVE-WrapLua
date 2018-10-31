@@ -15,12 +15,14 @@
 ## love.graphics
 - love.graphics.setBackgroundColor 
 - love.graphics.setColor 
-- love.graphics.rectangle 
 - love.graphics.newImage 
 - love.graphics.newFont 
 - love.graphics.draw 
 - love.graphics.setFont 
 - love.graphics.print 
+- love.graphics.rectangle 
+- love.graphics.circle
+- love.graphics.line
 
 ## love.timer
 - love.timer.getTime 
