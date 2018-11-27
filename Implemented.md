@@ -61,3 +61,4 @@
 - Source:play 
 - Source:stop 
 - Source:setLooping 
+- Source:setVolume

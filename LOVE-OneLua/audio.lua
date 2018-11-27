@@ -13,6 +13,9 @@ function love.audio.newSource(source,sourcetype)
 		stop = function(self)
 			love.audio.stop(self);
 		end;
+		setVolume = function(self,vol)
+			sound.vol(self.loadsound,vol*100)
+		end
 		}
 	return table
 end
