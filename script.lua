@@ -1,6 +1,6 @@
 --some info
 isPSP = os.cfw
-appmode = ""
+appmode = "TEST"
 appname = "LOVE-OneLua"
 dataloc = ""
 local keyconfigset = "XB"
@@ -71,6 +71,7 @@ function require(param)
 end
 
 --START!
+love.math.setRandomSeed(os.time())
 dofile(dataloc.."game/main.lua")
 if love.load then
 	love.load()
