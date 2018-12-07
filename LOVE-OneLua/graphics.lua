@@ -20,13 +20,23 @@ function love.graphics.newImage(filename)
 	return img
 end
 
-function love.graphics.draw(drawable,x,y)
+function love.graphics.draw(drawable,x,y,r,sx,sy)
 	if not x then x = 0 end
 	if not y then y = 0 end
+	if not sx then sx = 1 end
+	if not sy then sy = 1 end
 	
 	--scale 1280x720 to 960x540(vita) or 480x270(psp)
 	--x = x * 0.75; y = y * 0.75
 	--x = x * 0.375; y = y * 0.375
+	
+	if r then
+		image.rotate(drawable,(r/math.pi)*180) --radians to degrees
+	end
+	
+	if sx or sy then
+		image.resize(drawable,image.getrealw(drawable)*sx,image.getrealh(drawable)*sy)
+	end
 	
 	if drawable then
 		image.blit(drawable,x,y,color.a(current.color))
