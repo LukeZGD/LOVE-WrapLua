@@ -105,7 +105,7 @@ while true do
 	screen.flip()
 	
 	--Update
-	if tmr:time() >= 16.67 then
+	if tmr:time() >= 16 then
 		dt = tmr:time() / 1000
 		if love.update then
 			love.update(dt)
