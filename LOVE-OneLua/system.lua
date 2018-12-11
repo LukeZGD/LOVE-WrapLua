@@ -1,5 +1,5 @@
 function love.system.getOS()
-	if isPSP then
+	if lv1lua.isPSP then
 		return "LOVE-OneLua", "PSP"
 	else
 		return "LOVE-OneLua", "Vita"

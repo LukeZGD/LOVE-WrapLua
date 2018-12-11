@@ -1,6 +1,6 @@
-local saveloc = "ux0:/data/"..appname.."/savedata/"
-if isPSP then
-	saveloc = "ms0:/data/"..appname.."/savedata/"
+local saveloc = "ux0:/data/"..lv1lua.appname.."/savedata/"
+if lv1lua.isPSP then
+	saveloc = "ms0:/data/"..lv1lua.appname.."/savedata/"
 end
 
 if not files.exists(saveloc) then

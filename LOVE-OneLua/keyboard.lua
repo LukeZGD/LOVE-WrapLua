@@ -1,15 +1,15 @@
 function love.keyboard.isDown(key)
-	if key == keyconfig[1] then
+	if key == lv1lua.keyconf[1] then
 		key = "circle"
-	elseif key == keyconfig[2] then
+	elseif key == lv1lua.keyconf[2] then
 		key = "cross"
-	elseif key == keyconfig[3] then
+	elseif key == lv1lua.keyconf[3] then
 		key = "triangle"
-	elseif key == keyconfig[4] then
+	elseif key == lv1lua.keyconf[4] then
 		key = "square"
-	elseif key == keyconfig[5] then
+	elseif key == lv1lua.keyconf[5] then
 		key = "l"
-	elseif key == keyconfig[6] then
+	elseif key == lv1lua.keyconf[6] then
 		key = "r"
 	end
 	if buttons.held[key] then

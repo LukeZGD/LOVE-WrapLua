@@ -1,6 +1,6 @@
 function love.audio.newSource(source,sourcetype)
 	local table = {
-		loadsound = sound.load(dataloc.."game/"..source);
+		loadsound = sound.load(lv1lua.dataloc.."game/"..source);
 		type = sourcetype;
 		setLooping = function(self,setloop)
 			if (setloop and not sound.looping(self.loadsound)) or (not setloop and sound.looping(self.loadsound)) then

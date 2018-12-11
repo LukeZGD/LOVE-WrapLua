@@ -1,7 +1,7 @@
 --default print font
 local defaultfont
-if not isPSP then
-	defaultfont = {font=font.load(dataloc.."LOVE-OneLua/Vera.ttf"),size=12}
+if not lv1lua.isPSP then
+	defaultfont = {font=font.load(lv1lua.dataloc.."LOVE-OneLua/Vera.ttf"),size=12}
 	font.setdefault(defaultfont.font)
 else
 	defaultfont = {font=font.load("oneFont.pgf"),size=12}
@@ -12,7 +12,7 @@ end
 local current = {font=defaultfont,color=color.new(255,255,255,255)}
 
 function love.graphics.newImage(filename)
-	img = image.load(dataloc.."game/"..filename)
+	img = image.load(lv1lua.dataloc.."game/"..filename)
 	
 	--scale 1280x720 to 960x540 (vita)
 	--image.scale(img,75)
@@ -44,8 +44,8 @@ function love.graphics.draw(drawable,x,y,r,sx,sy)
 end
 
 function love.graphics.newFont(setfont, setsize)
-	if not isPSP and setfont then
-		setfont = font.load(dataloc.."game/"..setfont)
+	if not lv1lua.isPSP and setfont then
+		setfont = font.load(lv1lua.dataloc.."game/"..setfont)
 	else
 		setfont = defaultfont
 	end
@@ -62,7 +62,7 @@ function love.graphics.newFont(setfont, setsize)
 end
 
 function love.graphics.setFont(setfont,setsize)
-	if not isPSP and setfont then
+	if not lv1lua.isPSP and setfont then
 		current.font = setfont
 	else
 		current.font = defaultfont
