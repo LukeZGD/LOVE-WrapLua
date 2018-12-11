@@ -47,6 +47,7 @@
 - love.filesystem.load
 - love.filesystem.isFile
 - love.filesystem.getInfo (same as isFile)
+- love.filesystem.getIdentity
 
 ## love.math
 - love.math.random (same as math.random)

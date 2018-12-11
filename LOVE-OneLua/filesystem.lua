@@ -35,3 +35,7 @@ end
 function love.filesystem.getInfo(file)
 	return love.filesystem.isFile(file)
 end
+
+function love.filesystem.getIdentity(id)
+	return loveconfi.identity
+end

@@ -1,18 +1,40 @@
 --some info
+lv1lua = {}
 lv1lua.isPSP = os.cfw
-lv1lua.appmode = "TEST"
-lv1lua.appname = "LOVE-OneLua"
 lv1lua.dataloc = ""
-local lv1lua.keyconfset = "XB"
 
-if lv1lua.appmode == "TEST" and not lv1lua.isPSP then
-	lv1lua.dataloc = "ux0:/data/"..lv1lua.appname.."/"
+-- lv1lua conf, custom configs should go to lv1lua.lua
+lv1luaconf = {
+	keyconfset = "PS",
+	img_scale = false,
+	res_scale = false
+}
+
+-- love conf, custom configs go to game/conf.lua
+loveconfi = {
+    identity = "LOVE-OneLua"
+}
+	
+-- open conf files
+if file.exists("lv1lua.lua") then
+	dofile("lv1lua.lua")
 end
 
-if lv1lua.keyconfset == "PS" then
+if file.exists("game/conf.lua") then
+	dofile("game/conf.lua")
+	love.conf(loveconf)
+end
+
+if not lv1lua.isPSP then
+	lv1lua.dataloc = "ux0:/data/"..loveconfi.identity.."/"
+end
+
+-- set key config
+if lv1luaconf.keyconfset == "PS" then
+	-- Sony Key Config (this should be self-explanatory hahaha)
 	lv1lua.keyconf = {"circle","cross","triangle","square","l","r"}
-elseif lv1lua.keyconfset == "Nintendo" then
-	lv1lua.keyconf = {"a","b","x","y","lbutton","rbutton"}
+	
+elseif lv1luaconf.keyconfset == "NT" then
 	--[[
 	Nintendo Key Config
 	a = circle
@@ -22,8 +44,9 @@ elseif lv1lua.keyconfset == "Nintendo" then
 	lbutton = l trigger
 	rbutton = r trigger
 	]]
-elseif lv1lua.keyconfset == "XB" then
-	lv1lua.keyconf = {"b","a","y","x","lbutton","rbutton"}
+	lv1lua.keyconf = {"a","b","x","y","lbutton","rbutton"}
+	
+elseif lv1luaconf.keyconfset == "XB" then
 	--[[
 	Xbox Controller Key Config
 	b = circle
@@ -33,6 +56,8 @@ elseif lv1lua.keyconfset == "XB" then
 	lbutton = l trigger
 	rbutton = r trigger
 	]]
+	lv1lua.keyconf = {"b","a","y","x","lbutton","rbutton"}
+	
 end
 
 love = {}
