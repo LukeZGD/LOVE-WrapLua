@@ -61,5 +61,8 @@
 ## Source
 - Source:play 
 - Source:stop 
+- Source:getVolume
+- Source:isPlaying
+- Source:isLooping
 - Source:setLooping 
 - Source:setVolume
