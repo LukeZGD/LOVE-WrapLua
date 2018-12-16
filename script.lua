@@ -2,6 +2,15 @@
 lv1lua = {}
 lv1lua.isPSP = os.cfw
 lv1lua.dataloc = ""
+love = {}
+love.graphics = {}
+love.timer = {}
+love.audio = {}
+love.event = {}
+love.math = {}
+love.system = {}
+love.filesystem = {}
+love.keyboard = {}
 
 -- lv1lua conf, custom configs should go to lv1lua.lua
 lv1luaconf = {
@@ -11,23 +20,25 @@ lv1luaconf = {
 }
 
 -- love conf, custom configs go to game/conf.lua
+t = {
+	window = {},
+	modules = {}
+}
 loveconfi = {
     identity = "LOVE-OneLua"
 }
-	
+
 -- open conf files
-if file.exists("lv1lua.lua") then
+if files.exists("lv1lua.lua") then
 	dofile("lv1lua.lua")
 end
 
-if file.exists("game/conf.lua") then
+if files.exists("game/conf.lua") then
 	dofile("game/conf.lua")
-	love.conf(loveconf)
+	love.conf(t)
+	loveconfi = t
 end
-
-if not lv1lua.isPSP then
-	lv1lua.dataloc = "ux0:/data/"..loveconfi.identity.."/"
-end
+t = nil
 
 -- set key config
 if lv1luaconf.keyconfset == "PS" then
@@ -59,16 +70,6 @@ elseif lv1luaconf.keyconfset == "XB" then
 	lv1lua.keyconf = {"b","a","y","x","lbutton","rbutton"}
 	
 end
-
-love = {}
-love.graphics = {}
-love.timer = {}
-love.audio = {}
-love.event = {}
-love.math = {}
-love.system = {}
-love.filesystem = {}
-love.keyboard = {}
 
 --modules and stuff
 dofile(lv1lua.dataloc.."LOVE-OneLua/graphics.lua")

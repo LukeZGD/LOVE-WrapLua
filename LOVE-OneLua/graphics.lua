@@ -28,9 +28,9 @@ function love.graphics.draw(drawable,x,y,r,sx,sy)
 	if not sy then sy = 1 end
 	
 	--scale 1280x720 to 960x540(vita) or 480x270(psp)
-	if not lv1lua.isPSP and lv1luaconf.imgscale == true then
+	if not lv1lua.isPSP and (lv1luaconf.imgscale == true or lv1luaconf.resscale == true) then
 		x = x * 0.75; y = y * 0.75
-	elseif lv1lua.isPSP and lv1luaconf.imgscale == true then
+	elseif lv1lua.isPSP and lv1luaconf.resscale == true then
 		x = x * 0.375; y = y * 0.375
 	end
 	
@@ -61,7 +61,7 @@ function love.graphics.newFont(setfont, setsize)
 	local table = {
 		font = setfont;
 		size = setsize;
-		}
+	}
 	return table
 end
 
@@ -83,10 +83,10 @@ function love.graphics.print(text,x,y)
 	if not y then y = 0 end
 	
 	--scale 1280x720 to 960x540(vita) or 480x270(psp)
-	if not lv1lua.isPSP and lv1luaconf.imgscale == true then
+	if not lv1lua.isPSP and (lv1luaconf.imgscale == true or lv1luaconf.resscale == true) then
 		x = x * 0.75; y = y * 0.75
 		fontsize = fontsize*0.75
-	elseif lv1lua.isPSP and lv1luaconf.imgscale == true then
+	elseif lv1lua.isPSP and lv1luaconf.resscale == true then
 		x = x * 0.375; y = y * 0.375
 		fontsize = fontsize*0.6
 	end
@@ -107,9 +107,9 @@ end
 
 function love.graphics.rectangle(mode, x, y, w, h)
 	--scale 1280x720 to 960x540(vita) or 480x270(psp)
-	if not lv1lua.isPSP and lv1luaconf.imgscale == true then
+	if not lv1lua.isPSP and (lv1luaconf.imgscale == true or lv1luaconf.resscale == true) then
 		x = x * 0.75; y = y * 0.75; w = w * 0.75; h = h * 0.75
-	elseif lv1lua.isPSP and lv1luaconf.imgscale == true then
+	elseif lv1lua.isPSP and lv1luaconf.resscale == true then
 		x = x * 0.375; y = y * 0.375; w = w * 0.375; h = h * 0.375
 	end
 	

@@ -15,15 +15,15 @@ function love.audio.newSource(source,sourcetype)
 			sound.vol(self.loadsound,vol*100)
 		end;
 		setLooping = function(self,setloop)
-			if (setloop and not sound.looping(self.loadsound)) or (not setloop and sound.looping(self.loadsound)) then
+			if sound.looping(self.loadsound) ~= setloop then
 				sound.loop(self.loadsound);
 			end;
 		end;
 		isPlaying = function(self)
-			return source.playing(self.loadsound);
+			return sound.playing(self.loadsound);
 		end;
 		isLooping = function(self)
-			return source.looping(self.loadsound);
+			return sound.looping(self.loadsound);
 		end;
 		}
 	return table
