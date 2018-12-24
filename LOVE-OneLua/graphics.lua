@@ -26,6 +26,7 @@ function love.graphics.draw(drawable,x,y,r,sx,sy)
 	if not y then y = 0 end
 	if not sx then sx = 1 end
 	if not sy then sy = 1 end
+	if sx and not sy then sy = sx end
 	
 	--scale 1280x720 to 960x540(vita) or 480x270(psp)
 	if not lv1lua.isPSP and (lv1luaconf.imgscale == true or lv1luaconf.resscale == true) then
@@ -127,4 +128,3 @@ end
 function love.graphics.circle(x,y,radius)
 	draw.circle(x,y,radius,current.color,30)
 end
-	
