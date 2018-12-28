@@ -9,7 +9,7 @@ else
 end
 
 --set up stuff
-local current = {font=defaultfont,color=color.new(255,255,255,255)}
+current = {font=defaultfont,color=color.new(255,255,255,255)}
 
 function love.graphics.newImage(filename)
 	img = image.load(lv1lua.dataloc.."game/"..filename)
@@ -48,15 +48,17 @@ function love.graphics.draw(drawable,x,y,r,sx,sy)
 	end
 end
 
-function love.graphics.newFont(setfont, setsize)
-	if not lv1lua.isPSP and setfont then
-		setfont = font.load(lv1lua.dataloc.."game/"..setfont)
-	else
-		setfont = defaultfont
+function love.graphics.newFont(setfont, setsize)	
+	if tonumber(setfont) then
+		setsize = setfont
+	elseif not setsize then
+		setsize = 12
 	end
 	
-	if not setsize then
-		setsize = 12
+	if tonumber(setfont) or lv1lua.isPSP then
+		setfont = defaultfont.font
+	elseif setfont then
+		setfont = font.load(lv1lua.dataloc.."game/"..setfont)
 	end
 		
 	local table = {

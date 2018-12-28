@@ -24,9 +24,7 @@ t = {
 	window = {},
 	modules = {}
 }
-loveconfi = {
-    identity = "LOVE-OneLua"
-}
+loveconfi = t
 
 -- open conf files
 if files.exists("lv1lua.lua") then
@@ -37,6 +35,9 @@ if files.exists("game/conf.lua") then
 	dofile("game/conf.lua")
 	love.conf(t)
 	loveconfi = t
+	if not loveconfi.identity then
+		loveconfi.identity = "LOVE-OneLua"
+	end
 end
 t = nil
 

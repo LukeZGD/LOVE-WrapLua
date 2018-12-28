@@ -12,11 +12,7 @@ function love.keyboard.isDown(key)
 	elseif key == lv1lua.keyconf[6] then
 		key = "r"
 	end
-	if buttons.held[key] then
-		return true
-	else
-		return false
-	end
+	return buttons.held[key]
 end
 
 function love.keyboard.setTextInput(enable)
