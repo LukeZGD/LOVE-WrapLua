@@ -3,27 +3,30 @@ function love.audio.newSource(source,sourcetype)
 		loadsound = sound.load(lv1lua.dataloc.."game/"..source);
 		type = sourcetype;
 		play = function(self)
-			love.audio.play(self);
+			if self.loadsound then love.audio.play(self) end;
 		end;
 		stop = function(self)
-			love.audio.stop(self);
+			if self.loadsound then love.audio.stop(self) end;
 		end;
 		getVolume = function(self)
-			return sound.vol(self.loadsound);
+			if self.loadsound then return sound.vol(self.loadsound) end;
 		end;
 		setVolume = function(self,vol)
-			sound.vol(self.loadsound,vol*100)
-		end;
-		setLooping = function(self,setloop)
-			if sound.looping(self.loadsound) ~= setloop then
-				sound.loop(self.loadsound);
+			if self.loadsound then sound.vol(self.loadsound,vol*100) end;
 			end;
 		end;
+		setLooping = function(self,setloop)
+			if self.loadsound then
+				if sound.looping(self.loadsound) ~= setloop then
+					sound.loop(self.loadsound);
+				end;
+			end
+		end;
 		isPlaying = function(self)
-			return sound.playing(self.loadsound);
+			if self.loadsound then return sound.playing(self.loadsound) end;
 		end;
 		isLooping = function(self)
-			return sound.looping(self.loadsound);
+			if self.loadsound then return sound.looping(self.loadsound) end;
 		end;
 		}
 	return table
