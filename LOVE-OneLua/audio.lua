@@ -13,7 +13,6 @@ function love.audio.newSource(source,sourcetype)
 		end;
 		setVolume = function(self,vol)
 			if self.loadsound then sound.vol(self.loadsound,vol*100) end;
-			end;
 		end;
 		setLooping = function(self,setloop)
 			if self.loadsound then
