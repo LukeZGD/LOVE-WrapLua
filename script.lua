@@ -36,7 +36,7 @@ if files.exists("game/conf.lua") then
 	love.conf(t)
 	loveconfi = t
 	if not loveconfi.identity then
-		loveconfi.identity = "LOVE-OneLua"
+		loveconfi.identity = "LOVE-WrapLua"
 	end
 end
 t = nil
@@ -73,14 +73,14 @@ elseif lv1luaconf.keyconfset == "XB" then
 end
 
 --modules and stuff
-dofile(lv1lua.dataloc.."LOVE-OneLua/graphics.lua")
-dofile(lv1lua.dataloc.."LOVE-OneLua/timer.lua")
-dofile(lv1lua.dataloc.."LOVE-OneLua/audio.lua")
-dofile(lv1lua.dataloc.."LOVE-OneLua/event.lua")
-dofile(lv1lua.dataloc.."LOVE-OneLua/math.lua")
-dofile(lv1lua.dataloc.."LOVE-OneLua/system.lua")
-dofile(lv1lua.dataloc.."LOVE-OneLua/filesystem.lua")
-dofile(lv1lua.dataloc.."LOVE-OneLua/keyboard.lua")
+dofile(lv1lua.dataloc.."LOVE-WrapLua/graphics.lua")
+dofile(lv1lua.dataloc.."LOVE-WrapLua/timer.lua")
+dofile(lv1lua.dataloc.."LOVE-WrapLua/audio.lua")
+dofile(lv1lua.dataloc.."LOVE-WrapLua/event.lua")
+dofile(lv1lua.dataloc.."LOVE-WrapLua/math.lua")
+dofile(lv1lua.dataloc.."LOVE-WrapLua/system.lua")
+dofile(lv1lua.dataloc.."LOVE-WrapLua/filesystem.lua")
+dofile(lv1lua.dataloc.."LOVE-WrapLua/keyboard.lua")
 
 --return LOVE 0.10.2
 function love.getVersion()
