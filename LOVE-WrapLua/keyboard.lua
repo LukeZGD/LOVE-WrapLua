@@ -15,9 +15,12 @@ function love.keyboard.isDown(key)
 	return buttons.held[key]
 end
 
-function love.keyboard.setTextInput(enable)
+function love.keyboard.showTextInput(table)
 	if enable then
-		local text = osk.init("","")
+		local header = {"",""}
+		if table["header"] then header[1] = table["header"] end
+		if table["subheader"] then header[2] = table["subheader"] end
+		local text = osk.init(header[1],header[2])
 		if text and text ~= "" then love.textinput(text) end
 	end
 end
