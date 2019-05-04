@@ -42,34 +42,20 @@ end
 t = nil
 
 -- set key config
+if lv1luaconf.keyconfset == "SE" then
+	if buttons.assign() == 1 then
+		lv1luaconf.keyconfset = "XB"
+	else
+		lv1luaconf.keyconfset = "NT"
+	end
+end
+
 if lv1luaconf.keyconfset == "PS" then
-	-- Sony Key Config (this should be self-explanatory hahaha)
 	lv1lua.keyconf = {"circle","cross","triangle","square","l","r"}
-	
 elseif lv1luaconf.keyconfset == "NT" then
-	--[[
-	Nintendo Key Config
-	a = circle
-	b = cross
-	x = triangle
-	y = square
-	lbutton = l trigger
-	rbutton = r trigger
-	]]
-	lv1lua.keyconf = {"a","b","x","y","lbutton","rbutton"}
-	
+	lv1lua.keyconf = {"a","b","x","y","lbutton","rbutton"}	
 elseif lv1luaconf.keyconfset == "XB" then
-	--[[
-	Xbox Controller Key Config
-	b = circle
-	a = cross
-	y = triangle
-	x = square
-	lbutton = l trigger
-	rbutton = r trigger
-	]]
-	lv1lua.keyconf = {"b","a","y","x","lbutton","rbutton"}
-	
+	lv1lua.keyconf = {"b","a","y","x","lbutton","rbutton"}	
 end
 
 --modules and stuff
