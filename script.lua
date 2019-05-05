@@ -67,10 +67,18 @@ t = nil
 
 --set key config
 if lv1luaconf.keyconfset == "SE" then
-	if buttons.assign() == 1 then
-		lv1luaconf.keyconfset = "XB"
-	else
+	local confirm = false
+	
+	if lv1lua.mode == "lpp-vita" then
+		if Controls.getEnterButton() == SCE_CTRL_CIRCLE then confirm = true end
+	elseif lv1lua.mode = "OneLua" then
+		if buttons.assign() == 0 then confirm = true end
+	end
+	
+	if confirm then
 		lv1luaconf.keyconfset = "NT"
+	else
+		lv1luaconf.keyconfset = "XB"
 	end
 end
 
