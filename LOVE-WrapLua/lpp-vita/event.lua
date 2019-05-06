@@ -6,6 +6,7 @@ function love.event.quit(re)
 	if re == "restart" then
 		System.launchApp(System.getTitleID())
 	else
+		lv1lua.running = false
 		System.exit()
 	end
 end

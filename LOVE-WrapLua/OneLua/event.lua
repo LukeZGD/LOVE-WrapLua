@@ -6,6 +6,7 @@ function love.event.quit(re)
 	if re == "restart" then
 		os.restart()
 	else
+		lv1lua.running = false
 		os.exit()
 	end
 end

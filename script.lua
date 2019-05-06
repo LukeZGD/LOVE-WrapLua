@@ -1,6 +1,7 @@
 --set up lv1lua
 lv1lua = {}
 lv1lua.isPSP = os.cfw
+lv1lua.running = true
 
 if lv1lua_mode then
 	lv1lua.mode = lv1lua_mode
@@ -142,7 +143,7 @@ elseif not love.keyreleased then
 end
 
 --Main loop
-while true do
+while lv1lua.running do
 	--Draw
 	lv1lua.draw()
 	
