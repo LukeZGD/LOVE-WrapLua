@@ -1,4 +1,6 @@
 loadstring = load
+dt = 0.0167
+sys.UtilRegisterCallback()
 
 function lv1lua.draw()
 	StartGFX()
@@ -7,6 +9,8 @@ function lv1lua.draw()
 end
 
 function lv1lua.update() --this isn't really dt stuff, but ok heh
+	if love.update then love.update(dt) end
+	
 	--Check ingame XMB
 	local ret = sys.UtilCheckCallback(g_status)
 	if ret == sys.SYSUTIL_EXIT_GAME then

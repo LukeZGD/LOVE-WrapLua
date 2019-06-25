@@ -47,8 +47,9 @@ function lv1lua.exists(file)
 	if f ~= nil then io.close(f) return true else return false end
 end
 
-lv1lua.confexists = lvl1ua.exists(lv1lua.dataloc.."lv1lua.lua")
-lv1lua.loveconfexists = lvl1ua.exists(lv1lua.dataloc.."game/conf.lua")
+ 
+lv1lua.confexists = lv1lua.exists(lv1lua.dataloc.."lv1lua.lua")
+lv1lua.loveconfexists = lv1lua.exists(lv1lua.dataloc.."game/conf.lua")
 
 --open conf files
 if lv1lua.confexists then
@@ -72,7 +73,7 @@ if lv1luaconf.keyconfset == "SE" then
 	
 	if lv1lua.mode == "lpp-vita" then
 		if Controls.getEnterButton() == SCE_CTRL_CIRCLE then confirm = true end
-	elseif lv1lua.mode = "OneLua" then
+	elseif lv1lua.mode == "OneLua" then
 		if buttons.assign() == 0 then confirm = true end
 	end
 	

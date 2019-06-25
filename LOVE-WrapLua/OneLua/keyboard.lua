@@ -16,7 +16,7 @@ function love.keyboard.isDown(key)
 end
 
 function love.keyboard.showTextInput(table)
-	if enable then
+	if table then
 		local header = {"",""}
 		if table["header"] then header[1] = table["header"] end
 		if table["subheader"] then header[2] = table["subheader"] end
