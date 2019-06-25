@@ -6,6 +6,7 @@ You can use this to make LOVE2D stuff for a PSP, PS Vita, and/or PS3! As an exam
 
 This is made just for fun and will only have the basic stuff.
 
+- See Implemented.md for the implemented stuff
 - script.lua is the main file for LOVE-WrapLua (required)
 - index.lua is for lpp-vita to run script.lua (required for lpp-vita only)
 - app.lua is for Lua Player PS3 to run script.lua (required for Lua Player PS3 only)
