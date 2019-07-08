@@ -3,7 +3,7 @@ InitFont("/dev_flash/data/font/SCE-PS3-RD-R-LATIN.TTF", 12)
 defaultfont = nil
 
 --set up stuff
-current = {font=defaultfont,color=nil}
+lv1lua.current = {font=defaultfont,color=nil}
 
 function love.graphics.newImage(filename)
 	local img = surface()
@@ -63,7 +63,7 @@ function love.graphics.setFont(setfont,setsize)
 	if setsize then
 		--Font.setPixelSizes(setfont,setsize)
 	end
-	--current.font = setfont
+	--lv1lua.current.font = setfont
 end
 
 function love.graphics.print(text,x,y)
@@ -81,7 +81,7 @@ end
 
 function love.graphics.setColor(r,g,b,a)
 	if not a then a = 255 end
-	--current.color = Color.new(r,g,b,a)
+	--lv1lua.current.color = Color.new(r,g,b,a)
 end
 
 function love.graphics.setBackgroundColor(r,g,b)
@@ -93,16 +93,16 @@ function love.graphics.rectangle(mode, x, y, w, h)
 	x = x * 0.5625; y = y * 0.5625; w = w * 0.5625; h = h * 0.5625
 	
 	if mode == "fill" then
-		--Graphics.fillRect(x, x+w, y, y+h, current.color)
+		--Graphics.fillRect(x, x+w, y, y+h, lv1lua.current.color)
 	elseif mode == "line" then
-		--Graphics.fillEmptyRect(x, x+w, y, y+h, current.color)
+		--Graphics.fillEmptyRect(x, x+w, y, y+h, lv1lua.current.color)
 	end
 end
 
 function love.graphics.line(x1,y1,x2,y2)
-	--Graphics.drawLine(x1,y1,x2,y2,current.color)
+	--Graphics.drawLine(x1,y1,x2,y2,lv1lua.current.color)
 end
 
 function love.graphics.circle(x,y,radius)
-	--Graphics.fillCircle(x,y,radius,current.color)
+	--Graphics.fillCircle(x,y,radius,lv1lua.current.color)
 end

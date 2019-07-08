@@ -3,7 +3,7 @@ local defaultfont = Font.load(lv1lua.dataloc.."LOVE-WrapLua/Vera.ttf")
 Font.setPixelSizes(defaultfont,12)
 
 --set up stuff
-current = {font=defaultfont,color=Color.new(255,255,255,255)}
+lv1lua.current = {font=defaultfont,color=Color.new(255,255,255,255)}
 
 function love.graphics.newImage(filename)
 	local img = Graphics.loadImage(lv1lua.dataloc.."game/"..filename)
@@ -46,15 +46,15 @@ function love.graphics.draw(drawable,x,y,r,sx,sy)
 	end
 	
 	if drawable then
-		--image.blit(drawable,x,y,color.a(current.color))
-		Graphics.drawScaleImage(x,y,drawable,sx,sy,current.color)
+		--image.blit(drawable,x,y,color.a(lv1lua.current.color))
+		Graphics.drawScaleImage(x,y,drawable,sx,sy,lv1lua.current.color)
 		--[[
 		Graphics.drawImageExtended(
 			x,y,drawable, --x,y,image
 			x,y,Graphics.getImageWidth(drawable),Graphics.getImageHeight(drawable), --partial draw (not needed)
 			r, --rotation
 			sx,sy, --scale
-			current.color
+			lv1lua.current.color
 		)
 		]]
 	end
@@ -88,7 +88,7 @@ function love.graphics.setFont(setfont,setsize)
 	if setsize then
 		Font.setPixelSizes(setfont,setsize)
 	end
-	current.font = setfont
+	lv1lua.current.font = setfont
 end
 
 function love.graphics.print(text,x,y)
@@ -103,13 +103,13 @@ function love.graphics.print(text,x,y)
 	end
 	
 	if text then
-		Font.print(current.font,x,y,text,current.color)
+		Font.print(lv1lua.current.font,x,y,text,lv1lua.current.color)
 	end
 end
 
 function love.graphics.setColor(r,g,b,a)
 	if not a then a = 255 end
-	current.color = Color.new(r,g,b,a)
+	lv1lua.current.color = Color.new(r,g,b,a)
 end
 
 function love.graphics.setBackgroundColor(r,g,b)
@@ -125,16 +125,16 @@ function love.graphics.rectangle(mode, x, y, w, h)
 	end
 	
 	if mode == "fill" then
-		Graphics.fillRect(x, x+w, y, y+h, current.color)
+		Graphics.fillRect(x, x+w, y, y+h, lv1lua.current.color)
 	elseif mode == "line" then
-		Graphics.fillEmptyRect(x, x+w, y, y+h, current.color)
+		Graphics.fillEmptyRect(x, x+w, y, y+h, lv1lua.current.color)
 	end
 end
 
 function love.graphics.line(x1,y1,x2,y2)
-	Graphics.drawLine(x1,y1,x2,y2,current.color)
+	Graphics.drawLine(x1,y1,x2,y2,lv1lua.current.color)
 end
 
 function love.graphics.circle(x,y,radius)
-	Graphics.fillCircle(x,y,radius,current.color)
+	Graphics.fillCircle(x,y,radius,lv1lua.current.color)
 end
