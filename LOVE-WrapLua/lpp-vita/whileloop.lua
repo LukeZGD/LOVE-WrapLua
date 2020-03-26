@@ -7,12 +7,12 @@ function lv1lua.draw()
 end
 
 function lv1lua.update()
-	if Timer.getTime(tmr) >= 16 then
-		dt = Timer.getTime(tmr) / 1000
+	if Timer.getTime(lv1lua.timer) >= 16 then
+		dt = Timer.getTime(lv1lua.timer) / 1000
 		if love.update then
 			love.update(dt)
 		end
-		Timer.reset(tmr)
+		Timer.reset(lv1lua.timer)
 	end
 end
 

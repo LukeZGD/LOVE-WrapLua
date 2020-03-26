@@ -1,41 +1,15 @@
-local saveloc = "ux0:/data/"..loveconfi.identity.."/savedata/"
-if lv1lua.isPSP then
-	saveloc = "ms0:/data/"..loveconfi.identity.."/savedata/"
-end
-
-if not files.exists(saveloc) then
-	files.mkdir(saveloc)
-end
-
-function love.filesystem.read(file)
-	local openfile = io.open(saveloc..file, "r")
-	local contents = openfile:read()
-	io.close(openfile)
-	return contents
-end
-
-function love.filesystem.write(file,datawrite)
-	local openfile = io.open(saveloc..file, "w+")
-	openfile:write(datawrite)
-	io.close(openfile)
+if not files.exists(lv1lua.saveloc) then
+	files.mkdir(lv1lua.saveloc)
 end
 
 function love.filesystem.remove(file)
-	files.delete(saveloc..file)
-end
-
-function love.filesystem.load(file)
-	dofile(saveloc..file)
+	files.delete(lv1lua.saveloc..file)
 end
 
 function love.filesystem.isFile(file)
-	return files.exists(saveloc..file)
+	return files.exists(lv1lua.saveloc..file)
 end
 
 function love.filesystem.getInfo(file)
 	return love.filesystem.isFile(file)
-end
-
-function love.filesystem.getIdentity(id)
-	return loveconfi.identity
 end

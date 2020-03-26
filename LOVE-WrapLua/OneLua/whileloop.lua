@@ -6,12 +6,13 @@ function lv1lua.draw()
 end
 
 function lv1lua.update()
-	if tmr:time() >= 16 then
-		dt = tmr:time() / 1000
+	if lv1lua.timer:time() >= 16 then
+		dt = lv1lua.timer:time() / 1000
 		if love.update then
 			love.update(dt)
 		end
-		tmr:reset(); tmr:start()
+		lv1lua.timer:reset()
+		lv1lua.timer:start()
 	end
 end
 

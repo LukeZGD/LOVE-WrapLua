@@ -44,9 +44,9 @@
 - love.filesystem.read
 - love.filesystem.write
 - love.filesystem.remove
-- love.filesystem.load (currently incorrect implementation?)
+- love.filesystem.load
 - love.filesystem.isFile
-- love.filesystem.getInfo (same as isFile)
+- love.filesystem.getInfo (currently same as isFile)
 - love.filesystem.getIdentity
 
 ## love.math

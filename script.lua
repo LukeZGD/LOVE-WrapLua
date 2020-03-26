@@ -1,19 +1,13 @@
---set up lv1lua
-lv1lua = {}
+--setup
+if not lv1lua then
+	lv1lua = {}
+end
 lv1lua.isPSP = os.cfw
 lv1lua.running = true
-
-if lv1lua_mode then
-	lv1lua.mode = lv1lua_mode
-	lv1lua_mode = nil
-end
 
 if not lv1lua.mode then
 	lv1lua.dataloc = ""
 	lv1lua.mode = "OneLua"
-else
-	lv1lua.dataloc = lv1lua_dataloc
-	lv1lua_dataloc = nil
 end
 
 --set up love
@@ -99,8 +93,8 @@ dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/graphics.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/timer.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/audio.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/event.lua")
-dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/filesystem.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/keyboard.lua")
+dofile(lv1lua.dataloc.."LOVE-WrapLua/filesystem.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/math.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/system.lua")
 
