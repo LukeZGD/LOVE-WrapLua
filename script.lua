@@ -21,7 +21,7 @@ love.system = {}
 love.filesystem = {}
 love.keyboard = {}
 
---lv1lua conf, custom configs should go to lv1lua.lua
+--lv1luaconf, custom configs should go to lv1lua.lua
 lv1luaconf = {
 	keyconfset = "SE",
 	img_scale = false,
