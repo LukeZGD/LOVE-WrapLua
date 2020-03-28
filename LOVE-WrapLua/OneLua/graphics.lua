@@ -7,7 +7,7 @@ if not lv1lua.isPSP then
 	defaultfont = {font=font.load(lv1lua.dataloc.."LOVE-WrapLua/Vera.ttf"),size=12}
 	font.setdefault(defaultfont.font)
 else
-	defaultfont = {font=font.load("oneFont.pgf"),size=12}
+	defaultfont = {font=font.load("oneFont.pgf"),size=15}
 	font.setdefault(defaultfont.font)
 	scale = 0.375
 	fontscale = 0.6
