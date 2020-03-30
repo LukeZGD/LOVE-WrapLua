@@ -7,9 +7,14 @@ function love.filesystem.remove(file)
 end
 
 function love.filesystem.isFile(file)
-	return System.doesFileExist(lv1lua.saveloc..file)
+	return love.filesystem.getInfo(file)
 end
 
 function love.filesystem.getInfo(file)
-	return System.doesFileExist(lv1lua.saveloc..file) or System.doesDirExist(lv1lua.saveloc..file)
+	if System.doesFileExist(lv1lua.saveloc..file) or System.doesDirExist(lv1lua.saveloc..file) or
+	   System.doesFileExist(lv1lua.dataloc.."game/"..file) or System.doesDirExist(lv1lua.dataloc.."game/"..file) then
+		return true
+	else
+		return false
+	end
 end

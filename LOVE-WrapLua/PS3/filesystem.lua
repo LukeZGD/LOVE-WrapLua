@@ -7,9 +7,13 @@ function love.filesystem.load(file)
 end
 
 function love.filesystem.isFile(file)
-	return love.filesystem.getInfo(file)
+	if lv1lua.exists(lv1lua.saveloc..file) or lv1lua.exists(lv1lua.saveloc.."game/"..file) then
+		return true
+	else
+		return false
+	end
 end
 
 function love.filesystem.getInfo(file)
-	return lv1lua.exists(lv1lua.saveloc..file)
+	return love.filesystem.isFile(file)
 end

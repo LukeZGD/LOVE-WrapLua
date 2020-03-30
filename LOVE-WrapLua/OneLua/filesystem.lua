@@ -7,7 +7,11 @@ function love.filesystem.remove(file)
 end
 
 function love.filesystem.isFile(file)
-	return files.exists(lv1lua.saveloc..file)
+	if files.exists(lv1lua.saveloc..file) or files.exists(lv1lua.dataloc.."game/"..file) then
+		return true
+	else
+		return false
+	end
 end
 
 function love.filesystem.getInfo(file)
