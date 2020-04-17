@@ -4,7 +4,7 @@ function love.event.quit(re)
 	end
 	
 	if re == "restart" then
-		System.launchApp(System.getTitleID())
+		System.launchEboot("app0:/eboot.bin")
 	else
 		lv1lua.running = false
 		System.exit()

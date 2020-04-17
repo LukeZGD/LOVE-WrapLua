@@ -2,7 +2,7 @@ Sound.init()
 
 function love.audio.newSource(source,sourcetype)
 	local table = {
-		loadsound = nil; --Sound.open(lv1lua.dataloc.."game/"..source)
+		loadsound = Sound.open(lv1lua.dataloc.."game/"..source);
 		type = sourcetype;
 		play = function(self)
 			if self.loadsound then love.audio.play(self) end;
@@ -11,10 +11,10 @@ function love.audio.newSource(source,sourcetype)
 			if self.loadsound then love.audio.stop(self) end;
 		end;
 		getVolume = function(self)
-			if self.loadsound then return (Sound.getVolume(self.loadsound))/100 end;
+			if self.loadsound then return (Sound.getVolume(self.loadsound))/32767 end;
 		end;
 		setVolume = function(self,vol)
-			if self.loadsound then Sound.setVolume(self.loadsound,vol*100) end;
+			if self.loadsound then Sound.setVolume(self.loadsound,vol*32767) end;
 		end;
 		setLooping = function(self,setloop)
 			if setloop then
@@ -37,9 +37,10 @@ function love.audio.play(source)
 	if not source.loop then
 		source.loop = NO_LOOP
 	end	
-	--Sound.play(source.loadsound,source.loop)
+	Sound.play(source.loadsound,source.loop)
 end
 
 function love.audio.stop(source)
-	--Sound.pause(source.loadsound)
+	Sound.pause(source.loadsound)
+	Sound.close(source.loadsound)
 end

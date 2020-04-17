@@ -10,6 +10,10 @@ function love.graphics.newImage(filename)
 	return img
 end
 
+function lv1lua.freeImage(img)
+	Graphics.freeImage(img)
+end
+
 function love.graphics.draw(drawable,x,y,r,sx,sy)
 	if not x then x = 0 end
 	if not y then y = 0 end
