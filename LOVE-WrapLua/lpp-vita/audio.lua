@@ -2,7 +2,7 @@ Sound.init()
 
 function love.audio.newSource(source,sourcetype)
 	local table = {
-		loadsound = Sound.open(lv1lua.dataloc.."game/"..source);
+		loadsound = nil; --Sound.open(lv1lua.dataloc.."game/"..source)
 		type = sourcetype;
 		play = function(self)
 			if self.loadsound then love.audio.play(self) end;
@@ -36,11 +36,10 @@ end
 function love.audio.play(source)
 	if not source.loop then
 		source.loop = NO_LOOP
-	end
-	
-	Sound.play(source.loadsound,source.loop)
+	end	
+	--Sound.play(source.loadsound,source.loop)
 end
 
 function love.audio.stop(source)
-	Sound.pause(source.loadsound)
+	--Sound.pause(source.loadsound)
 end

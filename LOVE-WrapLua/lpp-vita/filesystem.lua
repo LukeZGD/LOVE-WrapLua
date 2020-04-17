@@ -1,4 +1,5 @@
 if not System.doesDirExist(lv1lua.saveloc) then
+	System.createDirectory("ux0:/data/"..loveconfi.identity)
 	System.createDirectory(lv1lua.saveloc)
 end
 

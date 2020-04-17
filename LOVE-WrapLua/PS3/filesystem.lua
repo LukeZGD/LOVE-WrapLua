@@ -1,9 +1,5 @@
 function love.filesystem.remove(file)
-	
-end
-
-function love.filesystem.load(file)
-	dofile(lv1lua.saveloc..file)
+	--remove
 end
 
 function love.filesystem.isFile(file)
