@@ -42,5 +42,5 @@ end
 
 function love.audio.stop(source)
 	Sound.pause(source.loadsound)
-	Sound.close(source.loadsound)
+	--Sound.close(source.loadsound)
 end
