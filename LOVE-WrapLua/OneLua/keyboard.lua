@@ -24,3 +24,7 @@ function love.keyboard.showTextInput(table)
 		if text and text ~= "" then love.textinput(text) end
 	end
 end
+
+function love.keyboard.setTextInput(table)
+	love.keyboard.showTextInput(table)
+end

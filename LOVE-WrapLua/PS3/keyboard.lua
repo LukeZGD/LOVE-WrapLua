@@ -18,8 +18,10 @@ function love.keyboard.isDown(key)
 	end	
 end
 
-function love.keyboard.setTextInput(enable)
-	if enable then
-		
-	end
+function love.keyboard.showTextInput(table)
+	--textinput
+end
+
+function love.keyboard.setTextInput(table)
+	love.keyboard.showTextInput(table)
 end

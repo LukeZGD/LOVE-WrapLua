@@ -26,3 +26,7 @@ function love.keyboard.showTextInput(table)
 		end
 	end
 end
+
+function love.keyboard.setTextInput(table)
+	love.keyboard.showTextInput(table)
+end
