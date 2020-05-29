@@ -21,69 +21,55 @@ love.system = {}
 love.filesystem = {}
 love.keyboard = {}
 
---lv1luaconf, custom configs should go to lv1lua.lua
-lv1luaconf = {
-	keyconfset = "SE",
-	img_scale = false,
-	res_scale = false
-}
+--for checking conf files
+function lv1lua.exists(file)
+	local f = io.open(file, "r")
+	if f ~= nil then io.close(f) return true else return false end
+end
 
 --love conf, custom configs go to game/conf.lua
 t = {
 	window = {},
 	modules = {}
 }
-loveconfi = t
+lv1lua.loveconf = t
 
---check conf files
-function lv1lua.exists(file)
-	local f = io.open(file, "r")
-	if f ~= nil then io.close(f) return true else return false end
-end
-
- 
-lv1lua.confexists = lv1lua.exists(lv1lua.dataloc.."lv1lua.lua")
-lv1lua.loveconfexists = lv1lua.exists(lv1lua.dataloc.."game/conf.lua")
-
---open conf files
-if lv1lua.confexists then
-	dofile(lv1lua.dataloc.."lv1lua.lua")
-end
-
-if lv1lua.loveconfexists then
+if lv1lua.exists(lv1lua.dataloc.."game/conf.lua") then
 	dofile(lv1lua.dataloc.."game/conf.lua")
 	love.conf(t)
-	loveconfi = t
-	if not loveconfi.identity then
-		loveconfi.identity = "LOVE-WrapLua"
+	lv1lua.loveconf = t
+	if not lv1lua.loveconf.identity then
+		lv1lua.loveconf.identity = "LOVE-WrapLua"
 	end
 end
-
 t = nil
 
---set key config
-if lv1luaconf.keyconfset == "SE" then
-	local confirm = false
-	
-	if lv1lua.mode == "lpp-vita" then
-		if Controls.getEnterButton() == SCE_CTRL_CIRCLE then confirm = true end
-	elseif lv1lua.mode == "OneLua" then
-		if buttons.assign() == 0 then confirm = true end
-	end
-	
-	if confirm then
-		lv1luaconf.keyconfset = "NT"
-	else
-		lv1luaconf.keyconfset = "XB"
-	end
+if not lv1luaconf then
+    --lv1luaconf, custom configs should go to lv1lua.lua
+    lv1luaconf = {
+        keyconf = "SE",
+        img_scale = false,
+        res_scale = false
+    }
 end
 
-if lv1luaconf.keyconfset == "PS" then
-	lv1lua.keyconf = {"circle","cross","triangle","square","l","r"}
-elseif lv1luaconf.keyconfset == "NT" then
-	lv1lua.keyconf = {"a","b","x","y","lbutton","rbutton"}	
-elseif lv1luaconf.keyconfset == "XB" then
-	lv1lua.keyconf = {"b","a","y","x","lbutton","rbutton"}	
+--set key config
+if lv1luaconf.keyconf == "SE" then
+	lv1lua.confirm = false
+	
+	if lv1lua.mode == "lpp-vita" then
+		if Controls.getEnterButton() == SCE_CTRL_CIRCLE then lv1lua.confirm = true end
+	elseif lv1lua.mode == "OneLua" then
+		if buttons.assign() == 0 then lv1lua.confirm = true end
+	end
+	
+	if not lv1lua.confirm then
+		lv1lua.keyset = {"b","a","y","x","leftshoulder","rightshoulder"}
+	else
+		lv1lua.keyset = {"a","b","x","y","leftshoulder","rightshoulder"}
+	end
+elseif lv1luaconf.keyconf == "PS" then
+	lv1lua.keyset = {"circle","cross","triangle","square","l","r"}
 end
 
 --modules and stuff

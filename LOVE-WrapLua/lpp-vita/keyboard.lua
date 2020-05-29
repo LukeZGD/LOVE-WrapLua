@@ -1,9 +1,9 @@
 lv1lua.keyenum = {16,64,128,32,8,1,8192,16384,4096,32768,256,512}
-lv1lua.keyname = {"up","down","left","right","start","select"}
+lv1lua.keyname = {"up","down","left","right","start","back"}
 lv1lua.keymask = {}
 
-for i = 1, #lv1lua.keyconf do
-	lv1lua.keyname[(#lv1lua.keyname)+1] = lv1lua.keyconf[i]
+for i = 1, #lv1lua.keyset do
+	lv1lua.keyname[(#lv1lua.keyname)+1] = lv1lua.keyset[i]
 end
 
 function love.keyboard.isDown(key)

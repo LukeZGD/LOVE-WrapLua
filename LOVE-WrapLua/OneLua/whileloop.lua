@@ -20,32 +20,36 @@ function lv1lua.updatecontrols()
 	buttons.read()
 	for i=1,#mask do
 		if buttons[mask[i]] and mask[i] == "circle" then
-			love.keypressed(lv1lua.keyconf[1])
+			love.keypressed(lv1lua.keyset[1])
 		elseif buttons[mask[i]] and mask[i] == "cross" then
-			love.keypressed(lv1lua.keyconf[2])
+			love.keypressed(lv1lua.keyset[2])
 		elseif buttons[mask[i]] and mask[i] == "triangle" then
-			love.keypressed(lv1lua.keyconf[3])
+			love.keypressed(lv1lua.keyset[3])
 		elseif buttons[mask[i]] and mask[i] == "square" then
-			love.keypressed(lv1lua.keyconf[4])
+			love.keypressed(lv1lua.keyset[4])
 		elseif buttons[mask[i]] and mask[i] == "l" then
-			love.keypressed(lv1lua.keyconf[5])
+			love.keypressed(lv1lua.keyset[5])
 		elseif buttons[mask[i]] and mask[i] == "r" then
-			love.keypressed(lv1lua.keyconf[6])
+			love.keypressed(lv1lua.keyset[6])
+        elseif buttons[mask[i]] and mask[i] == "select" then
+			love.keypressed("back")
 		elseif buttons[mask[i]] then
 			love.keypressed(mask[i])
 		end
 		if buttons.released[mask[i]] and mask[i] == "circle" then
-			love.keyreleased(lv1lua.keyconf[1])
+			love.keyreleased(lv1lua.keyset[1])
 		elseif buttons.released[mask[i]] and mask[i] == "cross" then
-			love.keyreleased(lv1lua.keyconf[2])
+			love.keyreleased(lv1lua.keyset[2])
 		elseif buttons.released[mask[i]] and mask[i] == "triangle" then
-			love.keyreleased(lv1lua.keyconf[3])
+			love.keyreleased(lv1lua.keyset[3])
 		elseif buttons.released[mask[i]] and mask[i] == "square" then
-			love.keyreleased(lv1lua.keyconf[4])
+			love.keyreleased(lv1lua.keyset[4])
 		elseif buttons.released[mask[i]] and mask[i] == "l" then
-			love.keyreleased(lv1lua.keyconf[5])
+			love.keyreleased(lv1lua.keyset[5])
 		elseif buttons.released[mask[i]] and mask[i] == "r" then
-			love.keyreleased(lv1lua.keyconf[6])
+			love.keyreleased(lv1lua.keyset[6])
+        elseif buttons.released[mask[i]] and mask[i] == "select" then
+			love.keyreleased("back")
 		elseif buttons.released[mask[i]] then
 			love.keyreleased(mask[i])
 		end

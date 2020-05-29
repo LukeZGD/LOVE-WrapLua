@@ -1,9 +1,9 @@
 if lv1lua.isPSP then
-	lv1lua.saveloc = "ms0:/PSP/GAME/"..loveconfi.identity.."/savedata/"
+	lv1lua.saveloc = "ms0:/PSP/GAME/"..lv1lua.loveconf.identity.."/savedata/"
 elseif lv1lua.mode == "PS3" then
 	lv1lua.saveloc = lv1lua.dataloc.."/savedata/"
 else
-	lv1lua.saveloc = "ux0:/data/"..loveconfi.identity.."/savedata/"
+	lv1lua.saveloc = "ux0:/data/"..lv1lua.loveconf.identity.."/savedata/"
 end
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/filesystem.lua")
 
@@ -25,5 +25,5 @@ function love.filesystem.load(file)
 end
 
 function love.filesystem.getIdentity(id)
-	return loveconfi.identity
+	return lv1lua.loveconf.identity
 end

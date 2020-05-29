@@ -24,22 +24,22 @@ end
 function lv1lua.updatecontrols()
 	--pressed
 	if pad.circle(0) > 0 and lv1lua.key.circle == 0 then
-		love.keypressed(lv1lua.keyconf[1])
+		love.keypressed(lv1lua.keyset[1])
 		lv1lua.key.circle = 1
 	elseif pad.cross(0) > 0 and lv1lua.key.cross == 0 then
-		love.keypressed(lv1lua.keyconf[2])
+		love.keypressed(lv1lua.keyset[2])
 		lv1lua.key.cross = 1
 	elseif pad.triangle(0) > 0 and lv1lua.key.triangle == 0 then
-		love.keypressed(lv1lua.keyconf[3])
+		love.keypressed(lv1lua.keyset[3])
 		lv1lua.key.triangle = 1
 	elseif pad.square(0) > 0 and lv1lua.key.square == 0 then
-		love.keypressed(lv1lua.keyconf[4])
+		love.keypressed(lv1lua.keyset[4])
 		lv1lua.key.square = 1
 	elseif pad.L1(0) > 0 and lv1lua.key.l == 0 then
-		love.keypressed(lv1lua.keyconf[5])
+		love.keypressed(lv1lua.keyset[5])
 		lv1lua.key.l = 1
 	elseif pad.R1(0) > 0 and lv1lua.key.r == 0 then
-		love.keypressed(lv1lua.keyconf[6])
+		love.keypressed(lv1lua.keyset[6])
 		lv1lua.key.r = 1
 	elseif pad.up(0) > 0 and lv1lua.key.up == 0 then
 		love.keypressed("up")
@@ -54,7 +54,7 @@ function lv1lua.updatecontrols()
 		love.keypressed("right")
 		lv1lua.key.right = 1
 	elseif pad.select(0) > 0 and lv1lua.key.select == 0 then
-		love.keypressed("select")
+		love.keypressed("back")
 		lv1lua.key.select = 1
 	elseif pad.start(0) > 0 and lv1lua.key.start == 0 then
 		love.keypressed("start")
@@ -63,22 +63,22 @@ function lv1lua.updatecontrols()
 	
 	--released
 	if pad.circle(0) == 0 and lv1lua.key.circle == 1 then
-		love.keyreleased(lv1lua.keyconf[1])
+		love.keyreleased(lv1lua.keyset[1])
 		lv1lua.key.circle = 0
 	elseif pad.cross(0) == 0 and lv1lua.key.cross == 1 then
-		love.keyreleased(lv1lua.keyconf[2])
+		love.keyreleased(lv1lua.keyset[2])
 		lv1lua.key.cross = 0
 	elseif pad.triangle(0) == 0 and lv1lua.key.triangle == 1 then
-		love.keyreleased(lv1lua.keyconf[3])
+		love.keyreleased(lv1lua.keyset[3])
 		lv1lua.key.triangle = 0
 	elseif pad.square(0) == 0 and lv1lua.key.square == 1 then
-		love.keyreleased(lv1lua.keyconf[4])
+		love.keyreleased(lv1lua.keyset[4])
 		lv1lua.key.square = 0
 	elseif pad.L1(0) == 0 and lv1lua.key.l == 1 then
-		love.keyreleased(lv1lua.keyconf[5])
+		love.keyreleased(lv1lua.keyset[5])
 		lv1lua.key.l = 0
 	elseif pad.R1(0) == 0 and lv1lua.key.r == 1 then
-		love.keyreleased(lv1lua.keyconf[6])
+		love.keyreleased(lv1lua.keyset[6])
 		lv1lua.key.r = 0
 	elseif pad.up(0) == 0 and lv1lua.key.up == 1 then
 		love.keyreleased("up")
@@ -93,7 +93,7 @@ function lv1lua.updatecontrols()
 		love.keyreleased("right")
 		lv1lua.key.right = 0
 	elseif pad.select(0) == 0 and lv1lua.key.select == 1 then
-		love.keyreleased("select")
+		love.keyreleased("back")
 		lv1lua.key.select = 0
 	elseif pad.start(0) == 0 and lv1lua.key.start == 1 then
 		love.keyreleased("start")
