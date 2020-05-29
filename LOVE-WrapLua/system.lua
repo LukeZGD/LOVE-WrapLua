@@ -1,11 +1,13 @@
+if lv1lua.isPSP then
+	love._console_name = "PSP"
+elseif lv1lua.mode == "PS3" then
+	love._console_name = "PS3"
+else
+	love._console_name = "Vita"
+end
+
 function love.system.getOS()
-	if lv1lua.isPSP then
-		return "LOVE-WrapLua", "PSP"
-	elseif lv1lua.mode == "PS3" then
-		return "LOVE-WrapLua", "PS3"
-	else
-		return "LOVE-WrapLua", "Vita"
-	end
+	return "LOVE-WrapLua"
 end
 
 function love.system.getLanguage()
