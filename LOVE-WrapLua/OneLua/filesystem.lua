@@ -2,6 +2,13 @@ if not files.exists(lv1lua.saveloc) then
 	files.mkdir(lv1lua.saveloc)
 end
 
+function love.filesystem.getUserDirectory()
+	return ""
+end
+function love.filesystem.getSaveDirectory()
+	return ""
+end
+
 function love.filesystem.remove(file)
 	files.delete(lv1lua.saveloc..file)
 end

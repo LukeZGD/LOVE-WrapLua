@@ -54,4 +54,18 @@ function lv1lua.updatecontrols()
 			love.keyreleased(mask[i])
 		end
 	end
+
+	___updateFrontTouch()
+end
+
+function ___updateFrontTouch()
+	local lastMouseDown = love.mouse.isDown()
+	touch.read()
+	love.touch.__getFrontTouches(touch)
+	love.mouse.__updateMouse()
+
+	local newMouseDown = love.mouse.isDown()
+	if(not lastMouseDown and newMouseDown) then
+		love.mousepressed(love.mouse.getX(), love.mouse.getY(), 1)
+	end
 end
