@@ -3,22 +3,22 @@ local scale = 0.75
 local fontscale = 0.75
 local defaultMinificationFilter = 3
 local defaultMagnificationFilter = 3
-local anisotropy = 1
+local anisotropy = 0
 
 local Transform =
 {
-	_scaleX = 1,
-	_scaleY = 1,
-	_offsetX = 0,
-	_offsetY = 0,
-	_usingScissor = false,
-	_scissorX = 0,
-	_scissorY = 0,
-	_scissorWidth = 0,
-	_scissorHeight = 0,
 	new = function(self)
 		local obj = {}
 		setmetatable(obj, self)
+		obj._scaleX = 1
+		obj._scaleY = 1
+		obj._offsetX = 0
+		obj._offsetY = 0
+		obj._usingScissor = false
+		obj._scissorX = 0
+		obj._scissorY = 0
+		obj._scissorWidth = 0
+		obj._scissorHeight = 0
 		return obj
 	end
 }
@@ -70,6 +70,14 @@ local _transformStack =
 	end
 }
 
+function __mathRound(value)
+	local remain = value % 1
+	if(remain % 1 >= 0.49) then
+		return value + 1 - remain
+	else
+		return value - remain
+	end
+end
 --default print font
 if not lv1lua.isPSP then
 	defaultfont = {font=font.load(lv1lua.dataloc.."LOVE-WrapLua/Vera.ttf"),size=12}
@@ -89,14 +97,14 @@ local _oldImageGetW = image.getw
 local _oldImageGetH = image.geth
 function image.getw(img)
 	if(img.imgData ~= nil) then
-		return _oldImageGetW(img.imgData)
+		return image.getrealw(img.imgData)
 	else
 		return _oldImageGetW(img)
 	end
 end
 function image.geth(img)
 	if(img.imgData ~= nil) then
-		return _oldImageGetH(img.imgData)
+		return image.getrealh(img.imgData)
 	else
 		return _oldImageGetH(img)
 	end
@@ -112,9 +120,9 @@ function love.graphics.newImage(filename)
 	local imgWrapper = 
 	{
 		imgData = img,
-		getWidth = function(self)return image.getw(self.imgData)end,
-		getHeight = function(self)return image.geth(self.imgData)end,
-		getDimensions = function(self) return image.getrealw(self.imgData), image.getrealh(self.imgData)end
+		getWidth = function(self)return image.getw(self)end,
+		getHeight = function(self)return image.geth(self)end,
+		getDimensions = function(self) return image.getw(self), image.geth(self)end
 	}
 	
 	return imgWrapper
@@ -124,10 +132,32 @@ function love.graphics.newQuad(x, y, width, height, sw, sh)
 	local quad = 
 	{
 		x=x,y=y,width=width,height=height,sw=sw,sh=sh,
+
+		_savedScaleX = 1,
+		_savedScaleY = 1,
+		_bufferImage = nil,
 		getTextureDimensions = function(self)return sw,sh end,
 		getViewport = function(self)return self.x, self.y, self.width, self.height end,
 		setViewport = function(self, x, y, width, height)self.x = x; self.y = y; self.width = width; self.height = height; end
 	}
+	function quad:getViewportScaled(sx, sy)
+		return self.x * sx, self.y * sy, self.width * sx, self.height * sy 
+	end
+	function quad:getTextureDimensionsScaled(sx, sy)
+		return sw * sx,sh * sy
+	end
+	function quad:updateBufferScaled(drawable, sx, sy)
+		--This function can lag a bit, but it is required, as I could not find in OneLua any other way to scale a image frame
+		if(sx ~= self._savedScaleX or sy ~= self._savedScaleY or self._bufferImage == nil) then
+			self._bufferImage = image.copyscale(drawable, self:getTextureDimensionsScaled(sx, sy))
+			self._savedScaleX = sx
+			self._savedScaleY = sy
+		end
+	end
+	function quad:draw(drawable, x, y, r, sx, sy)
+		self:updateBufferScaled(drawable, sx,sy)
+		love.graphics._defaultDraw(self._bufferImage, x, y, r, sx, sy, self:getViewportScaled(sx, sy))
+	end
 	return quad
 end
 
@@ -180,14 +210,15 @@ function love.graphics.setDefaultFilter(min, mag, anisotropy)
 	end
 	defaultMinificationFilter = min
 	defaultMagnificationFilter = mag
-
-	anisotropy = (anisotropy == nil) and 1 or anisotropy
+	anisotropy = (anisotropy == nil) and 0 or 1
 end
+
 function love.graphics.getDefaultFilter()
 	return defaultMinificationFilter, defaultMagnificationFilter, anisotropy
 end
 
 function love.graphics._defaultDraw(drawable,x,y,r,sx,sy, xf, yf, w, h)
+	if drawable == nil then print("No drawable passed"); return end
 	if not x then x = 0 end
 	if not y then y = 0 end
 	if sx and not sy then sy = sx end
@@ -208,19 +239,21 @@ function love.graphics._defaultDraw(drawable,x,y,r,sx,sy, xf, yf, w, h)
 			image.setfilter(drawable, defaultMinificationFilter, anisotropy)
 		end
 		image.resize(drawable,image.getrealw(drawable)*sx,image.getrealh(drawable)*sy)
+		-- image.scale(drawable,sx * 100,sy * 100)
 	end
-	
-	if drawable then
-		if(xf ~= nil) then
-			image.blit(drawable,x,y, xf, yf, w, h, color.a(lv1lua.current.color))
-		else
-			image.blit(drawable,x,y,color.a(lv1lua.current.color))
-		end
+	if(xf ~= nil) then
+		image.blit(drawable,x,y, xf, yf, w, h, color.a(lv1lua.current.color))
+	else
+		image.blit(drawable,x,y,color.a(lv1lua.current.color))
 	end
 end
 
-function love.graphics.draw(image,xOrQuad,y,r,sx,sy, x)
-	local drawable = (type(image) == "table") and image.imgData or image
+function __handleNegativeScale(x, y, sx, sy, r)
+	
+end
+
+function love.graphics.draw(drawable,xOrQuad,y,r,sx,sy, x)
+	local drawable = (type(drawable) == "table") and drawable.imgData or drawable
 	local _x, _y, _r, _sx, _sy
 	_transformStack:updateTransform()
 	local transform = _transformStack.transform
@@ -230,13 +263,18 @@ function love.graphics.draw(image,xOrQuad,y,r,sx,sy, x)
 		_r = sx
 		_sx = (sy == nil) and transform._scaleX or sy * transform._scaleX
 		_sy = (x == nil) and transform._scaleY or x * transform._scaleY
-		love.graphics._defaultDraw(drawable, _x, _y, _r, _sx, _sy, xOrQuad:getViewport())
+		_x = __mathRound(_x * _sx)
+		_y = __mathRound(_y * _sy)
+
+		xOrQuad:draw(drawable, _x, _y, _r, _sx, _sy)
+		-- love.graphics._defaultDraw(, _x, _y, _r, _sx, _sy, xOrQuad:getViewport())
 	else
 		_x = xOrQuad
 		_y = y
-		print(sx, transform._scaleX)
 		_sx = (sx == nil) and transform._scaleX or sx * transform._scaleX
 		_sy = (sy == nil) and transform._scaleY or sx * transform._scaleY
+		_x = __mathRound(_x * _sx)
+		_y = __mathRound(_y * _sy)
 		love.graphics._defaultDraw(drawable, _x, _y, r, _sx, _sy)
 	end
 end
@@ -273,10 +311,10 @@ function love.graphics.setFont(setfont,setsize)
 	end
 end
 
-function love.graphics.print(text,x,y)
-	local fontsize = lv1lua.current.font.size/18.5
+function love.graphics._defaultPrint(text, x, y, fontsize)
 	if not x then x = 0 end
 	if not y then y = 0 end
+	fontsize = ((fontsize == nil) and lv1lua.current.font.size/18.5 or fontsize)
 	
 	--scale 1280x720 to 960x540(vita) or 480x270(psp)
 	if lv1luaconf.imgscale == true or lv1luaconf.resscale == true then
@@ -287,6 +325,17 @@ function love.graphics.print(text,x,y)
 	if text then
 		screen.print(lv1lua.current.font.font,x,y,text,fontsize,lv1lua.current.color)
 	end
+end
+
+function love.graphics.print(text,x,y)
+	_transformStack:updateTransform()
+
+	local fontsize = lv1lua.current.font.size/18.5 * _transformStack.transform._scaleX
+	x = x * _transformStack.transform._scaleX 
+	y = y * _transformStack.transform._scaleY + screen.textheight(lv1lua.current.font.font, fontsize)
+	
+
+	love.graphics._defaultPrint(text, x, y, fontsize)
 end
 
 function ___getAlignX(x, align, size, wrapSize)
@@ -305,24 +354,25 @@ function love.graphics.printf(text, x, y, wrapWidth, align)
 	local fontsize = lv1lua.current.font.size/18.5
 
 	if text then
+		wrapWidth = wrapWidth * _transformStack.transform._scaleX
 		local lineJumpOn = wrapWidth / lv1lua.current.font.size
 		local tempPhraseSize = 0
 		local wordSize = 0
 		local phrase = ""
-		for word in string.gmatch(text, "%a+") do
+		for word in string.gmatch(text, "%S+") do
 			wordSize = string.len(word)
 			if(wordSize + tempPhraseSize >= lineJumpOn) then
-				love.graphics.print(phrase, ___getAlignX(x, align, screen.textwidth(lv1lua.current.font.font, phrase, fontsize), wrapWidth), y)
+				love.graphics.print(phrase, ___getAlignX(x, align, lv1lua.current.font.size * wordSize, wrapWidth), y)
 				y = y + screen.textheight(lv1lua.current.font.font, fontsize) --Jump line
-				phrase = word .. " "
-				tempPhraseSize = wordSize + 1
+				phrase = word
+				tempPhraseSize = wordSize
 			else
 				tempPhraseSize = tempPhraseSize + wordSize + 1
 				phrase = phrase .. " " ..  word
 			end
 		end
 		if(phrase ~= "") then
-			love.graphics.print(phrase, ___getAlignX(x, align, tempPhraseSize, wrapWidth), y)
+			love.graphics.print(phrase, ___getAlignX(x, align, lv1lua.current.font.size * _transformStack.transform._scaleX * wordSize, wrapWidth), y)
 		end
 	end
 
@@ -344,9 +394,9 @@ function love.graphics.rectangle(mode, x, y, w, h)
 	end
 	
 	if mode == "fill" then
-		draw.fillrect(x, y, w, h, lv1lua.current.color)
+		draw.fillrect(x, y, w * _transformStack.transform._scaleX, h * _transformStack.transform._scaleY, lv1lua.current.color)
 	elseif mode == "line" then
-		draw.rect(x, y, w, h, lv1lua.current.color)
+		draw.rect(x, y, w * _transformStack.transform._scaleX, h * _transformStack.transform._scaleY, lv1lua.current.color)
 	end
 end
 
@@ -355,5 +405,5 @@ function love.graphics.line(x1,y1,x2,y2)
 end
 
 function love.graphics.circle(x,y,radius)
-	draw.circle(x,y,radius,lv1lua.current.color,30)
+	draw.circle(x,y,radius * _transformStack.transform._scaleX,lv1lua.current.color,30)
 end

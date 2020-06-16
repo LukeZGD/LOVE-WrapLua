@@ -11,3 +11,14 @@ This is made just for fun and will only have the basic stuff.
 - `index.lua` is for lpp-vita to run `script.lua` (required for lpp-vita only)
 - `app.lua` is for Lua Player PS3 to run `script.lua` (required for Lua Player PS3 only)
 - `lv1luaconf` in `conf.lua` is to set up some settings for key configuration `keyconf`, resolution scale `resscale`, and image scale `imgscale`. This is optional; See `script.lua` for the default values
+
+## Changelog
+- By Hipreme/MrcSnm:
+### OneLua Only
+- Support most of love.graphics functions 
+- touch.lua and mouse.lua added 
+- Added command for resetting (Hold LEFT, UP, SQUARE, TRIANGLE, L and press R)
+- Support for quads, global scale and offset
+- Backwards WrapLua compatibility
+- Now it supports love2d objects (Now you can call imageInstance:getWidth() etc)
+- Added some do-nothing functions for not breaking code compatibility with desktop version
