@@ -120,10 +120,36 @@ function love.graphics.newImage(filename)
 	local imgWrapper = 
 	{
 		imgData = img,
+		flipX = false,
+		flipY = false,
 		getWidth = function(self)return image.getw(self)end,
 		getHeight = function(self)return image.geth(self)end,
 		getDimensions = function(self) return image.getw(self), image.geth(self)end
 	}
+	--Necessary to execute the same behavior from love2d desktop
+	function imgWrapper:__handleNegativeScale(x, y, sx, sy)
+		if(sx > 0 and self.flipX) then
+			image.fliph(self.imgData)
+			self.flipX = not self.flipX
+		elseif(sx < 0 and self.flipX == false) then
+			image.fliph(self.imgData)
+			self.flipX = not self.flipX
+		end
+		if(sy > 0 and self.flipY) then
+			image.flipv(self.imgData)
+			self.flipY = not self.flipY
+		elseif(sy < 0 and self.flipY == false) then
+			image.flipv(self.imgData)
+			self.flipY = not self.flipY
+		end
+		if(sx < 0) then
+			x = x + (self:getWidth() * sx)
+		end
+		if(sy < 0) then
+			y = y + self:getHeight() * sy
+		end
+		return x,y
+	end
 	
 	return imgWrapper
 end
@@ -231,7 +257,7 @@ function love.graphics._defaultDraw(drawable,x,y,r,sx,sy, xf, yf, w, h)
 	if r then
 		image.rotate(drawable,(r/math.pi)*180) --radians to degrees
 	end
-	
+
 	if sx then
 		if(sx > 1) then
 			image.setfilter(drawable, defaultMagnificationFilter, anisotropy)
@@ -239,7 +265,6 @@ function love.graphics._defaultDraw(drawable,x,y,r,sx,sy, xf, yf, w, h)
 			image.setfilter(drawable, defaultMinificationFilter, anisotropy)
 		end
 		image.resize(drawable,image.getrealw(drawable)*sx,image.getrealh(drawable)*sy)
-		-- image.scale(drawable,sx * 100,sy * 100)
 	end
 	if(xf ~= nil) then
 		image.blit(drawable,x,y, xf, yf, w, h, color.a(lv1lua.current.color))
@@ -248,12 +273,9 @@ function love.graphics._defaultDraw(drawable,x,y,r,sx,sy, xf, yf, w, h)
 	end
 end
 
-function __handleNegativeScale(x, y, sx, sy, r)
-	
-end
-
 function love.graphics.draw(drawable,xOrQuad,y,r,sx,sy, x)
-	local drawable = (type(drawable) == "table") and drawable.imgData or drawable
+	local isDrawableNew = (type(drawable) == "table")
+	
 	local _x, _y, _r, _sx, _sy
 	_transformStack:updateTransform()
 	local transform = _transformStack.transform
@@ -263,19 +285,31 @@ function love.graphics.draw(drawable,xOrQuad,y,r,sx,sy, x)
 		_r = sx
 		_sx = (sy == nil) and transform._scaleX or sy * transform._scaleX
 		_sy = (x == nil) and transform._scaleY or x * transform._scaleY
-		_x = __mathRound(_x * _sx)
-		_y = __mathRound(_y * _sy)
+		local absSx, absSy = math.abs(_sx), math.abs(_sy)
+		_x = __mathRound(_x * absSx)
+		_y = __mathRound(_y * absSy)
 
-		xOrQuad:draw(drawable, _x, _y, _r, _sx, _sy)
-		-- love.graphics._defaultDraw(, _x, _y, _r, _sx, _sy, xOrQuad:getViewport())
+		if(isDrawableNew) then
+			_x, _y = drawable:__handleNegativeScale(_x, _y, _sx, _sy)
+			xOrQuad:draw(drawable.imgData, _x, _y, _r, absSx, absSy)
+		else
+			xOrQuad:draw(drawable, _x, _y, _r, absSx, absSy)
+		end
 	else
 		_x = xOrQuad
 		_y = y
 		_sx = (sx == nil) and transform._scaleX or sx * transform._scaleX
-		_sy = (sy == nil) and transform._scaleY or sx * transform._scaleY
-		_x = __mathRound(_x * _sx)
-		_y = __mathRound(_y * _sy)
-		love.graphics._defaultDraw(drawable, _x, _y, r, _sx, _sy)
+		_sy = (sy == nil) and transform._scaleY or sy * transform._scaleY
+		_x = __mathRound(_x * math.abs(_sx))
+		_y = __mathRound(_y * math.abs(_sy))
+		local absSx, absSy = math.abs(_sx), math.abs(_sy)
+		
+		if isDrawableNew then
+			_x, _y = drawable:__handleNegativeScale(_x, _y, _sx, _sy)
+			love.graphics._defaultDraw(drawable.imgData, _x, _y, r, absSx, absSy)
+		else
+			love.graphics._defaultDraw(drawable, _x, _y, r, absSx, absSy)
+		end
 	end
 end
 
