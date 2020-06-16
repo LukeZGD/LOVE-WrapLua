@@ -54,8 +54,16 @@ function lv1lua.updatecontrols()
 			love.keyreleased(mask[i])
 		end
 	end
-
+	__checkGameRestart()
 	___updateFrontTouch()
+end
+
+function __checkGameRestart()
+	if buttons.r and buttons.held.up and buttons.held.left and buttons.held.triangle and buttons.held.square and buttons.held.l
+	then
+		print("RESTART")
+		os.restart()
+	end
 end
 
 function ___updateFrontTouch()

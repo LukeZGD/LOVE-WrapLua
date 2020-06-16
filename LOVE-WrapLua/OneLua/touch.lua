@@ -6,7 +6,7 @@ love.touch = {
 love.touch.__getFrontTouches = function(touchUserData)
     love.touch._count = touchUserData.front.count
     for i = 1, touchUserData.front.count do
-        love.touch._touches = touchUserData.front[i]
+        love.touch._touches[i] = touchUserData.front[i]
     end
 
 end

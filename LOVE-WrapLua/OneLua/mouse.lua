@@ -20,7 +20,7 @@ end
 
 
 love.mouse.isDown = function()
-    return love.touch.getPressure(1) == 1
+    return love.touch.getPressure(love.touch._count) == 1
 end
 
 love.mouse.__updateMouse = function()
