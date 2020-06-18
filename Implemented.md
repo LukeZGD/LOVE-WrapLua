@@ -20,11 +20,9 @@
 - love.graphics.draw 
 - love.graphics.setFont 
 - love.graphics.print 
-- love.graphics.printf
 - love.graphics.rectangle 
 - love.graphics.circle
 - love.graphics.line
-- love.graphics.newQuad
 
 ## love.timer
 - love.timer.getTime 
@@ -68,3 +66,8 @@
 - Source:isLooping
 - Source:setLooping 
 - Source:setVolume
+
+
+# VITA OneLua callbacks
+- onLiveArea
+- onResume

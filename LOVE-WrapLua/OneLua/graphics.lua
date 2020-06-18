@@ -259,11 +259,7 @@ function love.graphics._defaultDraw(drawable,x,y,r,sx,sy, xf, yf, w, h)
 	end
 
 	if sx then
-		if(sx > 1) then
-			image.setfilter(drawable, defaultMagnificationFilter, anisotropy)
-		else
-			image.setfilter(drawable, defaultMinificationFilter, anisotropy)
-		end
+		image.setfilter(drawable, defaultMagnificationFilter, defaultMinificationFilter)
 		image.resize(drawable,image.getrealw(drawable)*sx,image.getrealh(drawable)*sy)
 	end
 	if(xf ~= nil) then
@@ -311,7 +307,13 @@ function love.graphics.draw(drawable,xOrQuad,y,r,sx,sy, x)
 			love.graphics._defaultDraw(drawable, _x, _y, r, absSx, absSy)
 		end
 	end
+
+
+	--Test for fps
 end
+
+--Too much text in just graphics.lua
+loadfile(lv1lua.dataloc.."LOVE-WrapLua"..lv1lua.mode.."text.lua")
 
 function love.graphics.newFont(setfont, setsize)	
 	if tonumber(setfont) then
@@ -319,18 +321,28 @@ function love.graphics.newFont(setfont, setsize)
 	elseif not setsize then
 		setsize = 12
 	end
-	
+	local fontName = setfont
+	--For the currently OneLua ver, there must be one guinea pig for screen.textwidth, as using it on the current font may
+	--Cause it to blur
+	local guineaPig
+
 	if tonumber(setfont) or lv1lua.isPSP then
 		setfont = defaultfont.font
 	elseif setfont then
-		setfont = font.load(lv1lua.dataloc.."game/"..setfont)
+		setfont = font.load(lv1lua.dataloc.."game/"..fontName)
+		guineaPig = font.load(lv1lua.dataloc.."game/"..fontName)
 	end
 		
-	local table = {
+	local nFont = {
+		name = fontName;
 		font = setfont;
+		guineaPig = guineaPig;
 		size = setsize;
 	}
-	return table
+	function nFont:getWidth(text)
+		return screen.textwidth(self.guineaPig, text, self.size / 18.5)
+	end
+	return nFont
 end
 
 function love.graphics.setFont(setfont,setsize)
@@ -364,8 +376,8 @@ end
 function love.graphics.print(text,x,y)
 	_transformStack:updateTransform()
 
-	local fontsize = lv1lua.current.font.size/18.5 * _transformStack.transform._scaleX
-	x = x * _transformStack.transform._scaleX 
+	local fontsize = lv1lua.current.font.size/18.5 * (_transformStack.transform._scaleX + _transformStack.transform._scaleY)/2
+	x = x * _transformStack.transform._scaleX
 	y = y * _transformStack.transform._scaleY + screen.textheight(lv1lua.current.font.font, fontsize)
 	
 
@@ -386,28 +398,30 @@ function love.graphics.printf(text, x, y, wrapWidth, align)
 	--Accepteds alignments
 	--Left, Right and Center
 	local fontsize = lv1lua.current.font.size/18.5
-
-	if text then
-		wrapWidth = wrapWidth * _transformStack.transform._scaleX
-		local lineJumpOn = wrapWidth / lv1lua.current.font.size
-		local tempPhraseSize = 0
-		local wordSize = 0
-		local phrase = ""
-		for word in string.gmatch(text, "%S+") do
-			wordSize = string.len(word)
-			if(wordSize + tempPhraseSize >= lineJumpOn) then
-				love.graphics.print(phrase, ___getAlignX(x, align, lv1lua.current.font.size * wordSize, wrapWidth), y)
-				y = y + screen.textheight(lv1lua.current.font.font, fontsize) --Jump line
-				phrase = word
-				tempPhraseSize = wordSize
+	local size
+	if text == nil or text == "" then
+		return
+	end
+	local phrase = text
+	local isFirst = true
+	for word in string.gmatch(text, "%S+") do
+		size = lv1lua.current.font:getWidth(phrase)
+		if(size >= wrapWidth) then
+			love.graphics.print(phrase, ___getAlignX(x, align, size, wrapWidth), y)
+			y = y + screen.textheight(lv1lua.current.font.font, fontsize) --Jump line
+			phrase = word
+		else
+			if(isFirst) then
+				phrase = tostring(word)
+				isFirst = false
 			else
-				tempPhraseSize = tempPhraseSize + wordSize + 1
-				phrase = phrase .. " " ..  word
+				phrase = phrase .. " " ..  tostring(word)
 			end
 		end
-		if(phrase ~= "") then
-			love.graphics.print(phrase, ___getAlignX(x, align, lv1lua.current.font.size * _transformStack.transform._scaleX * wordSize, wrapWidth), y)
-		end
+	end
+	if(phrase ~= "") then
+		x = ___getAlignX(x, align, lv1lua.current.font:getWidth(phrase), wrapWidth)
+		love.graphics.print(phrase,x , y)
 	end
 
 end
@@ -440,4 +454,15 @@ end
 
 function love.graphics.circle(x,y,radius)
 	draw.circle(x,y,radius * _transformStack.transform._scaleX,lv1lua.current.color,30)
+end
+
+function ___displaySystemInfo()
+	local currRam = math.floor((os.ram() / 1000000) * 100) / 100
+	local totalRam = math.floor((os.totalram() / 1000000) * 100) / 100
+	currRam = totalRam - currRam
+	screen.print(10, 10, "FPS: " .. screen.frame() .. "/" .. screen.fps(), 12 / 18.5, color.new(0, 255, 0, 255))
+	screen.print(10, 30, "RAM: " .. currRam .. "/" .. totalRam .. "MB", 12 / 18.5, color.new(0, 255, 0, 255))
+	screen.print(10, 50, "CPU: " .. os.cpu() .. "/444Mhz", 12 / 18.5, color.new(0, 255, 0, 255))
+	screen.print(10, 70, "GPU: " .. os.gpuclock() .. "/166Mhz", 12 / 18.5, color.new(0, 255, 0, 255))
+	screen.print(10, 90, "GPU CROSS: " .. os.crossbarclock() .. "/222Mhz", 12 / 18.5, color.new(0, 255, 0, 255))
 end

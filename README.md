@@ -22,3 +22,16 @@ This is made just for fun and will only have the basic stuff.
 - Backwards WrapLua compatibility
 - Now it supports love2d objects (Now you can call imageInstance:getWidth() etc)
 - Added some do-nothing functions for not breaking code compatibility with desktop version
+
+### Needing
+- Rotated text
+- Blend modes
+- Shader support
+- Tint blit for everything
+- Better image.blit for quads
+
+
+#### Known Issues
+- Calling screen.textwidth(font, text, size) will make the font passed on the argument to blur, the current workaround is creating a clone e.g loading the same font 2 times and then using the guinea pig to get the text width
+- Calling image.blit() for a resized image quad will mantain the texture size, the current workaround is loading a image copy with image.copyscale() for the size needed, it will cache this resized image until it's scale is changed, the problem is that it will lag a bit when caching, don't know to what extent this is possible, and doing scale animations with images from quad is really inusable
+- The only supported audio that didn't crash the engine was mp3 at a 44100 sample rate, wav file didn't crash, but sounded strange, need more tests

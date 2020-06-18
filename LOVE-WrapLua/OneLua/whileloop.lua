@@ -1,4 +1,13 @@
-local mask = {"up", "down", "left", "right", "cross", "circle", "square", "triangle", "r", "l", "start", "select"}
+local mask = {"up", "down", "left", "right", "cross", "circle", "square", "triangle", "r", "l", "start", "select", "home", "volup", "voldown"}
+local homeHeldtime = 0
+local homeCallbackThreshold = 0.04 --Next to 3 frames
+local homeCallbackCancel = 1
+
+dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/callbacks.lua")
+
+buttons.homepopup(0) -- Block out to livearea.
+--Live area will be handled manually
+
 
 function lv1lua.draw()
 	if love.draw then love.draw() end
@@ -50,12 +59,15 @@ function lv1lua.updatecontrols()
 			love.keyreleased(lv1lua.keyset[6])
         elseif buttons.released[mask[i]] and mask[i] == "select" then
 			love.keyreleased("back")
+		elseif buttons[mask[i]] and mask[i] == "home" then
+			__resume()
 		elseif buttons.released[mask[i]] then
 			love.keyreleased(mask[i])
 		end
 	end
 	__checkGameRestart()
 	___updateFrontTouch()
+	__checkHomePress()
 end
 
 function __checkGameRestart()
@@ -63,6 +75,34 @@ function __checkGameRestart()
 	then
 		print("RESTART")
 		os.restart()
+	end
+end
+
+function __checkHomePress()
+	--When all analogs are 0 and not flicking, it means that home is pressed
+	if(buttons.analoglx == 0 and buttons.analogly == 0 and buttons.analogrx == 0 and buttons.analogry == 0) then
+		homeHeldtime = homeHeldtime + dt
+	else
+		if(homeHeldtime>= homeCallbackThreshold and homeHeldtime < homeCallbackCancel) then
+			__goLiveArea()
+		end
+		homeHeldtime = 0
+	end
+end
+
+function __goLiveArea()
+	-- buttons.homepopup(1)
+	print("Live Area")
+	onLiveArea()
+	os.golivearea()
+end
+
+function __resume()
+	-- buttons.homepopup(0)
+	if(homeHeldtime>= homeCallbackThreshold and homeHeldtime < homeCallbackCancel) then
+		print("Resume")
+		homeHeldtime = 0
+		onResume()
 	end
 end
 
