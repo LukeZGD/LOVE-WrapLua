@@ -76,10 +76,10 @@ end
 function love.audio.play(source)
 	if source.type == "static" then
 		_channel1 = source
-		sound.play(source.loadsound,2)
+		sound.play(source.loadsound,1)
 	else
 		_channel2 = source
-		sound.play(source.loadsound,1)
+		sound.play(source.loadsound,2)
 	end
 end
 

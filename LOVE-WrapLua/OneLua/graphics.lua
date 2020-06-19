@@ -70,6 +70,52 @@ local _transformStack =
 	end
 }
 
+local cachedPrintf =
+{
+	text = {}, --Will be some map
+	purgeAt = 100,
+}
+function cachedPrintf:cache(text, line, x, y, align) 
+	if(self.text[text..align] == nil) then
+		self.text[text..align] = {lines = {}, x = {}, y = {}, sizes = {}, len = 0, purgeCount = 0}
+	end
+	local c = self.text[text..align]
+	c.len = c.len + 1
+	c.x[c.len] = x
+	c.y[c.len] = y
+	c.font = lv1lua.current.font.font
+	c.size = lv1lua.current.font.size
+	c.lines[c.len] = line
+end
+function cachedPrintf:purge()
+	local v 
+	local at = self.purgeAt
+	for i in pairs(self.text) do
+		v = self.text[i]
+		v.purgeCount = v.purgeCount + 1
+		if v.purgeCount == at then
+			self.text[i] = nil
+		end
+	end
+end
+function cachedPrintf:print(text, align)
+	if(self.text[text..align] == nil) then
+		return false
+	else
+		local v = self.text[text..align]
+		if(v.size ~= lv1lua.current.font.size or v.font ~= lv1lua.current.font.font) then
+			self.text[text..align] = nil
+			return false
+		end
+		
+		v.purgeCount = 0
+		for i = 1, v.len do
+			love.graphics.print(v.lines[i], v.x[i], v.y[i])
+		end
+		return true
+	end
+end
+
 function __mathRound(value)
 	local remain = value % 1
 	if(remain % 1 >= 0.49) then
@@ -312,8 +358,7 @@ function love.graphics.draw(drawable,xOrQuad,y,r,sx,sy, x)
 	--Test for fps
 end
 
---Too much text in just graphics.lua
-loadfile(lv1lua.dataloc.."LOVE-WrapLua"..lv1lua.mode.."text.lua")
+--Too much text in just graphics.lua, considering in split graphics.lua in many modules
 
 function love.graphics.newFont(setfont, setsize)	
 	if tonumber(setfont) then
@@ -341,6 +386,9 @@ function love.graphics.newFont(setfont, setsize)
 	}
 	function nFont:getWidth(text)
 		return screen.textwidth(self.guineaPig, text, self.size / 18.5)
+	end
+	function nFont:getHeight()
+		return screen.textheight(self.guineaPig, self.size / 18.5)
 	end
 	return nFont
 end
@@ -376,9 +424,10 @@ end
 function love.graphics.print(text,x,y)
 	_transformStack:updateTransform()
 
-	local fontsize = lv1lua.current.font.size/18.5 * (_transformStack.transform._scaleX + _transformStack.transform._scaleY)/2
+	local fontsize = lv1lua.current.font.size/18.5 * _transformStack.transform._scaleX
 	x = x * _transformStack.transform._scaleX
-	y = y * _transformStack.transform._scaleY + screen.textheight(lv1lua.current.font.font, fontsize)
+	--Dont know why, just works
+	y = (y + fontsize) * _transformStack.transform._scaleY + lv1lua.current.font:getHeight()
 	
 
 	love.graphics._defaultPrint(text, x, y, fontsize)
@@ -394,36 +443,96 @@ function ___getAlignX(x, align, size, wrapSize)
 	end
 end
 
+function __formatTextPrint(text, x, y, wrapWidth, align)
+	local word = ""
+	local currentPhrase = ""
+	local __phraseWidth = 0
+	local __wordWidth = 0
+	local currentIndex = 1
+	local spaceWidth = lv1lua.current.font:getWidth(" ")
+
+	for c in string.gmatch(text, ".") do
+		if(c == "\n" or __wordWidth > wrapWidth or __wordWidth + __phraseWidth > wrapWidth) then
+			if(__wordWidth > wrapWidth) then
+
+				--Print word 
+				cachedPrintf:cache(text, word, ___getAlignX(x, align, __wordWidth , wrapWidth), y, align)
+				love.graphics.print(word, ___getAlignX(x, align, __wordWidth , wrapWidth), y)
+
+				word = ""
+				__wordWidth = 0
+
+			elseif(__wordWidth + __phraseWidth > wrapWidth) then
+				--Print phrase and store word for the next print phase
+				local found = false
+				for i = currentIndex, string.len(text) do
+					if string.sub(text, i, i) == " " then --Print what I have
+						cachedPrintf:cache(text, currentPhrase, ___getAlignX(x, align, __phraseWidth + spaceWidth*2, wrapWidth), y, align)
+						love.graphics.print(currentPhrase, ___getAlignX(x, align, __phraseWidth + spaceWidth*2, wrapWidth), y)
+						found = true
+						-- print("FOUND, printing '"..currentPhrase.."'")
+						word = word..c
+						__wordWidth = __wordWidth + spaceWidth
+						break
+					end
+				end
+				if(not found) then
+					cachedPrintf:cache(text, currentPhrase..word, ___getAlignX(x, align, __phraseWidth + __wordWidth + spaceWidth , wrapWidth), y, align)
+					love.graphics.print(currentPhrase..word, ___getAlignX(x, align, __phraseWidth + __wordWidth + spaceWidth , wrapWidth), y)
+					word = ""
+					__wordWidth = 0
+				end
+			else --\n case
+				cachedPrintf:cache(text, currentPhrase..word, ___getAlignX(x, align, __wordWidth + __phraseWidth , wrapWidth), y, align)
+				love.graphics.print(currentPhrase..word, ___getAlignX(x, align, __wordWidth + __phraseWidth , wrapWidth), y)
+				word = ""
+				__wordWidth = 0
+			end
+			y = y + lv1lua.current.font:getHeight() --Jump line
+			currentPhrase = ""
+			__phraseWidth = 0
+		--If it has a space, append current word to the phrase for future print
+		elseif(c == " ") then
+			if(currentPhrase ~= "") then
+				currentPhrase = currentPhrase.." "..word
+				__phraseWidth = __wordWidth + __phraseWidth + spaceWidth
+			else
+				currentPhrase = word
+				__phraseWidth = __wordWidth
+			end
+			
+			-- print("Phrase = "..currentPhrase.." "..__phraseWidth)
+			word = ""
+			__wordWidth = 0
+		else
+			word = word..c
+			__wordWidth = __wordWidth + lv1lua.current.font:getWidth(c)
+		end
+		currentIndex = currentIndex + 1
+	end
+
+	--If there is any remaining text unprinted
+	if(__phraseWidth ~= 0 or __wordWidth ~= 0) then
+		cachedPrintf:cache(text, currentPhrase.." "..word, ___getAlignX(x, align, __wordWidth + __phraseWidth + spaceWidth*2 , wrapWidth), y, align)
+		love.graphics.print(currentPhrase.." "..word, ___getAlignX(x, align, __wordWidth + __phraseWidth + spaceWidth*2 , wrapWidth), y)
+	end
+end
+
 function love.graphics.printf(text, x, y, wrapWidth, align)
 	--Accepteds alignments
 	--Left, Right and Center
-	local fontsize = lv1lua.current.font.size/18.5
-	local size
 	if text == nil or text == "" then
 		return
 	end
-	local phrase = text
-	local isFirst = true
-	for word in string.gmatch(text, "%S+") do
-		size = lv1lua.current.font:getWidth(phrase)
-		if(size >= wrapWidth) then
-			love.graphics.print(phrase, ___getAlignX(x, align, size, wrapWidth), y)
-			y = y + screen.textheight(lv1lua.current.font.font, fontsize) --Jump line
-			phrase = word
-		else
-			if(isFirst) then
-				phrase = tostring(word)
-				isFirst = false
-			else
-				phrase = phrase .. " " ..  tostring(word)
-			end
-		end
-	end
-	if(phrase ~= "") then
-		x = ___getAlignX(x, align, lv1lua.current.font:getWidth(phrase), wrapWidth)
-		love.graphics.print(phrase,x , y)
-	end
+	--Adds a purge count to every cached printf call
+	cachedPrintf:purge()
+	--If it was printed, it will reset its counter to purge
 
+	if(cachedPrintf:print(text, align)) then
+		return
+	end
+	--If not, generate a formatted print cache and print on screen
+	__formatTextPrint(text, x, y, wrapWidth, align)
 end
 
 function love.graphics.setColor(r,g,b,a)

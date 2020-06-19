@@ -2,6 +2,7 @@ local mask = {"up", "down", "left", "right", "cross", "circle", "square", "trian
 local homeHeldtime = 0
 local homeCallbackThreshold = 0.04 --Next to 3 frames
 local homeCallbackCancel = 1
+local homeTime = 545
 
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/callbacks.lua")
 
@@ -26,6 +27,7 @@ function lv1lua.update()
 end
 
 function lv1lua.updatecontrols()
+	buttons.homepopup(0)
 	buttons.read()
 	for i=1,#mask do
 		if buttons[mask[i]] and mask[i] == "circle" then
@@ -59,8 +61,6 @@ function lv1lua.updatecontrols()
 			love.keyreleased(lv1lua.keyset[6])
         elseif buttons.released[mask[i]] and mask[i] == "select" then
 			love.keyreleased("back")
-		elseif buttons[mask[i]] and mask[i] == "home" then
-			__resume()
 		elseif buttons.released[mask[i]] then
 			love.keyreleased(mask[i])
 		end
@@ -86,20 +86,22 @@ function __checkHomePress()
 		if(homeHeldtime>= homeCallbackThreshold and homeHeldtime < homeCallbackCancel) then
 			__goLiveArea()
 		end
-		homeHeldtime = 0
+		__resume()
 	end
 end
 
 function __goLiveArea()
-	-- buttons.homepopup(1)
 	print("Live Area")
 	onLiveArea()
 	os.golivearea()
+	os.delay(homeTime)
 end
 
 function __resume()
-	-- buttons.homepopup(0)
 	if(homeHeldtime>= homeCallbackThreshold and homeHeldtime < homeCallbackCancel) then
+		while(buttons.waitforkey(__HOME)) do
+			os.delay(1)
+		end
 		print("Resume")
 		homeHeldtime = 0
 		onResume()
