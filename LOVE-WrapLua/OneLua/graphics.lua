@@ -5,6 +5,25 @@ local defaultMinificationFilter = 3
 local defaultMagnificationFilter = 3
 local anisotropy = 0
 
+local _loadedFonts = {fontInstances = {}}
+function _loadedFonts:hasLoaded(fontName, size)
+	return (self.fontInstances[fontName..size] ~= nil)
+end
+function _loadedFonts:setLoaded(fontName, fontInstance)
+	self.fontInstances[fontName..fontInstance.size] = fontInstance
+end
+--There is a default font offset for OneLua, another issue instead of setting correctly a pivot point
+--It's pivot is (0, 1) + offsetY, this offsetY = default font size, it is easier to notice the pivot when scaling it down
+
+local _VITA_DEFAULT_PRINT_Y_OFFSET = 18.5 --Current Ugly Workaround
+--Another problem, screen.textheight is broken
+local __oldScreenTxtHeight = screen.textheight
+function screen.textheight(font, size)
+	return size
+end
+
+
+
 local Transform =
 {
 	new = function(self)
@@ -136,7 +155,11 @@ else
 end
 
 --set up stuff
-lv1lua.current = {font=defaultfont,color=color.new(255,255,255,255)}
+lv1lua.current = 
+{
+	font=defaultfont,
+	color=color.new(255,255,255,255)
+}
 
 --Set up compatibility from old to new api
 local _oldImageGetW = image.getw
@@ -221,6 +244,9 @@ function love.graphics.newQuad(x, y, width, height, sw, sh)
 	function quad:updateBufferScaled(drawable, sx, sy)
 		--This function can lag a bit, but it is required, as I could not find in OneLua any other way to scale a image frame
 		if(sx ~= self._savedScaleX or sy ~= self._savedScaleY or self._bufferImage == nil) then
+			if(self._bufferImage ~= nil) then
+				image.lost(drawable) --Clear the buffer
+			end
 			self._bufferImage = image.copyscale(drawable, self:getTextureDimensionsScaled(sx, sy))
 			self._savedScaleX = sx
 			self._savedScaleY = sy
@@ -338,8 +364,8 @@ function love.graphics.draw(drawable,xOrQuad,y,r,sx,sy, x)
 			xOrQuad:draw(drawable, _x, _y, _r, absSx, absSy)
 		end
 	else
-		_x = xOrQuad
-		_y = y
+		_x = xOrQuad or 0
+		_y = y or 0
 		_sx = (sx == nil) and transform._scaleX or sx * transform._scaleX
 		_sy = (sy == nil) and transform._scaleY or sy * transform._scaleY
 		_x = __mathRound(_x * math.abs(_sx))
@@ -374,23 +400,28 @@ function love.graphics.newFont(setfont, setsize)
 	if tonumber(setfont) or lv1lua.isPSP then
 		setfont = defaultfont.font
 	elseif setfont then
-		setfont = font.load(lv1lua.dataloc.."game/"..fontName)
-		guineaPig = font.load(lv1lua.dataloc.."game/"..fontName)
+		if(not _loadedFonts:hasLoaded(fontName, setsize)) then
+			setfont = font.load(lv1lua.dataloc.."game/"..fontName)
+			guineaPig = font.load(lv1lua.dataloc.."game/"..fontName)
+			local nFont = {
+				name = fontName;
+				font = setfont;
+				guineaPig = guineaPig;
+				size = setsize;
+			}
+			_loadedFonts:setLoaded(fontName, nFont)
+			function nFont:getWidth(text)
+				return screen.textwidth(self.guineaPig, text, self.size / 18.5)
+			end
+			function nFont:getHeight()
+				return screen.textheight(self.guineaPig, self.size)
+			end
+			return nFont
+		else
+			return _loadedFonts.fontInstances[fontName..setsize]
+		end
 	end
 		
-	local nFont = {
-		name = fontName;
-		font = setfont;
-		guineaPig = guineaPig;
-		size = setsize;
-	}
-	function nFont:getWidth(text)
-		return screen.textwidth(self.guineaPig, text, self.size / 18.5)
-	end
-	function nFont:getHeight()
-		return screen.textheight(self.guineaPig, self.size / 18.5)
-	end
-	return nFont
 end
 
 function love.graphics.setFont(setfont,setsize)
@@ -405,6 +436,10 @@ function love.graphics.setFont(setfont,setsize)
 	end
 end
 
+function love.graphics.setNewFont(setfont,setsize)
+	love.graphics.setFont(love.graphics.newFont(setfont, setsize), setsize)
+end
+
 function love.graphics._defaultPrint(text, x, y, fontsize)
 	if not x then x = 0 end
 	if not y then y = 0 end
@@ -416,19 +451,23 @@ function love.graphics._defaultPrint(text, x, y, fontsize)
 		fontsize = fontsize*fontscale
 	end
 	
-	if text then
-		screen.print(lv1lua.current.font.font,x,y,text,fontsize,lv1lua.current.color)
-	end
+	screen.print(lv1lua.current.font.font,x,y,text,fontsize,lv1lua.current.color)
 end
 
 function love.graphics.print(text,x,y)
+	if text == nil or text == "" then
+		return
+	end
 	_transformStack:updateTransform()
 
-	local fontsize = lv1lua.current.font.size/18.5 * _transformStack.transform._scaleX
+	local _fontScale = (_transformStack.transform._scaleX + _transformStack.transform._scaleY) / 2
+	local fontsize = lv1lua.current.font.size/18.5 * _fontScale
+
+	local heightOffset = lv1lua.current.font:getHeight() * _fontScale
 	x = x * _transformStack.transform._scaleX
-	--Dont know why, just works
-	y = (y + fontsize) * _transformStack.transform._scaleY + lv1lua.current.font:getHeight()
-	
+	y = y * _transformStack.transform._scaleY
+	--For actually pivoting it on (0,0)
+	y = y - (_VITA_DEFAULT_PRINT_Y_OFFSET - heightOffset)
 
 	love.graphics._defaultPrint(text, x, y, fontsize)
 end

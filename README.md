@@ -39,6 +39,12 @@ This is made just for fun and will only have the basic stuff.
 - Calling image.blit() for a resized image quad will mantain the texture size, the current workaround is loading a image copy with image.copyscale() for the size needed, it will cache this resized image until it's scale is changed, the problem is that it will lag a bit when caching, don't know to what extent this is possible, and doing scale animations with images from quad is really inusable
 - The only supported audio that didn't crash the engine was mp3 at a 44100 sample rate, wav file didn't crash, but sounded strange, need more tests
 
+
+
+#### OneLua Wrong Documentations
+- screen.textheight -> Actually receiving (string) instead receiving (userdata, number), actually returning 20 no matter what, the Y offset = 18.5
+- image.setfilter -> Actually receives a image and the 2 types (image, number, number), image, mag, min
+
 ##### EXTRA
 - Tool for sending every type of file for Linux, called fastCurl, just call
 ```sh

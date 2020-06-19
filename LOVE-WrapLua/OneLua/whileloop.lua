@@ -6,7 +6,6 @@ local homeTime = 545
 
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/callbacks.lua")
 
-buttons.homepopup(0) -- Block out to livearea.
 --Live area will be handled manually
 
 
@@ -27,7 +26,7 @@ function lv1lua.update()
 end
 
 function lv1lua.updatecontrols()
-	buttons.homepopup(0)
+	-- buttons.homepopup(0)
 	buttons.read()
 	for i=1,#mask do
 		if buttons[mask[i]] and mask[i] == "circle" then
@@ -67,17 +66,18 @@ function lv1lua.updatecontrols()
 	end
 	__checkGameRestart()
 	___updateFrontTouch()
-	__checkHomePress()
+	-- __checkHomePress()
 end
 
 function __checkGameRestart()
-	if buttons.r and buttons.held.up and buttons.held.left and buttons.held.triangle and buttons.held.square and buttons.held.l
+	if buttons.start and buttons.held.l and buttons.held.r and buttons.held.down
 	then
 		print("RESTART")
 		os.restart()
 	end
 end
 
+--WIP
 function __checkHomePress()
 	--When all analogs are 0 and not flicking, it means that home is pressed
 	if(buttons.analoglx == 0 and buttons.analogly == 0 and buttons.analogrx == 0 and buttons.analogry == 0) then
