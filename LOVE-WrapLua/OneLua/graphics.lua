@@ -266,6 +266,7 @@ function love.graphics.translate(offsetX, offsetY)
 end
 
 function love.graphics.scale(scaleX, scaleY)
+	if not scaleY then scaleY = scaleX end
 	_transformStack.stack[#_transformStack.stack]._scaleX = scaleX
 	_transformStack.stack[#_transformStack.stack]._scaleY = scaleY
 	_transformStack._dirty = true
