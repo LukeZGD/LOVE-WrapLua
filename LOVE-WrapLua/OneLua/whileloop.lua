@@ -1,4 +1,13 @@
-local mask = {"up", "down", "left", "right", "cross", "circle", "square", "triangle", "r", "l", "start", "select"}
+local mask = {"up", "down", "left", "right", "cross", "circle", "square", "triangle", "r", "l", "start", "select", "home", "volup", "voldown"}
+local homeHeldtime = 0
+local homeCallbackThreshold = 0.04 --Next to 3 frames
+local homeCallbackCancel = 1
+local homeTime = 545
+
+dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/callbacks.lua")
+
+--Live area will be handled manually
+
 
 function lv1lua.draw()
 	if love.draw then love.draw() end
@@ -17,6 +26,7 @@ function lv1lua.update()
 end
 
 function lv1lua.updatecontrols()
+	-- buttons.homepopup(0)
 	buttons.read()
 	for i=1,#mask do
 		if buttons[mask[i]] and mask[i] == "circle" then
@@ -53,5 +63,59 @@ function lv1lua.updatecontrols()
 		elseif buttons.released[mask[i]] then
 			love.keyreleased(mask[i])
 		end
+	end
+	__checkGameRestart()
+	___updateFrontTouch()
+	-- __checkHomePress()
+end
+
+function __checkGameRestart()
+	if buttons.start and buttons.held.l and buttons.held.r and buttons.held.down
+	then
+		print("RESTART")
+		os.restart()
+	end
+end
+
+--WIP
+function __checkHomePress()
+	--When all analogs are 0 and not flicking, it means that home is pressed
+	if(buttons.analoglx == 0 and buttons.analogly == 0 and buttons.analogrx == 0 and buttons.analogry == 0) then
+		homeHeldtime = homeHeldtime + dt
+	else
+		if(homeHeldtime>= homeCallbackThreshold and homeHeldtime < homeCallbackCancel) then
+			__goLiveArea()
+		end
+		__resume()
+	end
+end
+
+function __goLiveArea()
+	print("Live Area")
+	onLiveArea()
+	os.golivearea()
+	os.delay(homeTime)
+end
+
+function __resume()
+	if(homeHeldtime>= homeCallbackThreshold and homeHeldtime < homeCallbackCancel) then
+		while(buttons.waitforkey(__HOME)) do
+			os.delay(1)
+		end
+		print("Resume")
+		homeHeldtime = 0
+		onResume()
+	end
+end
+
+function ___updateFrontTouch()
+	local lastMouseDown = love.mouse.isDown()
+	touch.read()
+	love.touch.__getFrontTouches(touch)
+	love.mouse.__updateMouse()
+
+	local newMouseDown = love.mouse.isDown()
+	if(not lastMouseDown and newMouseDown) then
+		love.mousepressed(love.mouse.getX(), love.mouse.getY(), 1)
 	end
 end

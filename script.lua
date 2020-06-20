@@ -61,6 +61,8 @@ if lv1luaconf.keyconf == "SE" then
 		if Controls.getEnterButton() == SCE_CTRL_CIRCLE then lv1lua.confirm = true end
 	elseif lv1lua.mode == "OneLua" then
 		if buttons.assign() == 0 then lv1lua.confirm = true end
+		dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/touch.lua")
+		dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/mouse.lua")
 	end
 	
 	if not lv1lua.confirm then
@@ -89,14 +91,10 @@ function love.getVersion()
 	return 0, 10, 2
 end
 
---require replacement?
+--require replacement correctly working now
+__oldRequire = require
 function require(param)
-	if string.sub(param, -4) == ".lua" then
-		param = lv1lua.dataloc.."game/"..param
-	else
-		param = lv1lua.dataloc.."game/"..param..".lua"
-	end
-	dofile(param)
+	return __oldRequire("game/"..param)
 end
 
 --START!

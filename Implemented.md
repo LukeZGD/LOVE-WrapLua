@@ -66,3 +66,8 @@
 - Source:isLooping
 - Source:setLooping 
 - Source:setVolume
+
+
+# VITA OneLua callbacks
+- onLiveArea
+- onResume
