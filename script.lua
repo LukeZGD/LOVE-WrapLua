@@ -54,12 +54,12 @@ end
 t = nil
 
 if not lv1luaconf then
-    --lv1luaconf, custom configs should go to lv1lua.lua
-    lv1luaconf = {
-        keyconf = "SE",
-        img_scale = false,
-        res_scale = false
-    }
+	--lv1luaconf, custom configs should go to lv1lua.lua
+	lv1luaconf = {
+		keyconf = "SE",
+		img_scale = false,
+		res_scale = false
+	}
 end
 
 --set key config
@@ -84,8 +84,12 @@ elseif lv1luaconf.keyconf == "PS" then
 end
 
 --modules and stuff
+if lv1lua.isPSP then
+	dofile(lv1lua.dataloc.."LOVE-WrapLua/OneLua/graphics_psp.lua")
+else
+	dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/graphics.lua")
+end
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/whileloop.lua")
-dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/graphics.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/timer.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/audio.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/event.lua")

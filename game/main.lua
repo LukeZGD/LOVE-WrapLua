@@ -18,8 +18,7 @@ end
 
 function love.load()
 	image = lg.newImage("image.png")
-	local def = lg.newFont(24)
-	lg.setFont(def)
+	local def = lg.setNewFont(24)
 end
 
 function love.draw()

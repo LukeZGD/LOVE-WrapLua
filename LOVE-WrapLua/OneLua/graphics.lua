@@ -1,6 +1,5 @@
-local defaultfont
+local defaultfont = lv1lua.dataloc.."LOVE-WrapLua/Vera.ttf"
 local scale = 0.75
-local fontscale = 0.75
 local defaultMinificationFilter = 3
 local defaultMagnificationFilter = 3
 local anisotropy = 0
@@ -21,8 +20,6 @@ local __oldScreenTxtHeight = screen.textheight
 function screen.textheight(font, size)
 	return size
 end
-
-
 
 local Transform =
 {
@@ -143,18 +140,9 @@ function __mathRound(value)
 		return value - remain
 	end
 end
---default print font
-if not lv1lua.isPSP then
-	defaultfont = {font=font.load(lv1lua.dataloc.."LOVE-WrapLua/Vera.ttf"),size=12}
-	font.setdefault(defaultfont.font)
-else
-	defaultfont = {font=font.load("oneFont.pgf"),size=15}
-	font.setdefault(defaultfont.font)
-	scale = 0.375
-	fontscale = 0.6
-end
 
 --set up stuff
+font.setdefault(font.load(defaultfont))
 lv1lua.current = 
 {
 	font=defaultfont,
@@ -322,7 +310,7 @@ function love.graphics._defaultDraw(drawable,x,y,r,sx,sy, xf, yf, w, h)
 	if not y then y = 0 end
 	if sx and not sy then sy = sx end
 	
-	--scale 1280x720 to 960x540(vita) or 480x270(psp)
+	--scale 1280x720 to 960x540(vita)
 	if lv1luaconf.imgscale == true or lv1luaconf.resscale == true then
 		x = x * scale; y = y * scale
 	end
@@ -387,9 +375,13 @@ end
 
 --Too much text in just graphics.lua, considering in split graphics.lua in many modules
 
-function love.graphics.newFont(setfont, setsize)	
-	if tonumber(setfont) then
+function love.graphics.newFont(setfont, setsize)
+	if not setfont then
+		setsize = 12
+		setfont = defaultfont
+	elseif tonumber(setfont) then
 		setsize = setfont
+		setfont = defaultfont
 	elseif not setsize then
 		setsize = 12
 	end
@@ -398,40 +390,34 @@ function love.graphics.newFont(setfont, setsize)
 	--Cause it to blur
 	local guineaPig
 
-	if tonumber(setfont) or lv1lua.isPSP then
-		setfont = defaultfont.font
-	elseif setfont then
-		if(not _loadedFonts:hasLoaded(fontName, setsize)) then
-			setfont = font.load(lv1lua.dataloc.."game/"..fontName)
-			guineaPig = font.load(lv1lua.dataloc.."game/"..fontName)
-			local nFont = {
-				name = fontName;
-				font = setfont;
-				guineaPig = guineaPig;
-				size = setsize;
-			}
-			_loadedFonts:setLoaded(fontName, nFont)
-			function nFont:getWidth(text)
-				return screen.textwidth(self.guineaPig, text, self.size / 18.5)
-			end
-			function nFont:getHeight()
-				return screen.textheight(self.guineaPig, self.size)
-			end
-			return nFont
+	if(not _loadedFonts:hasLoaded(fontName, setsize)) then
+		if fontName == defaultfont then
+			setfont = font.load(defaultfont)
 		else
-			return _loadedFonts.fontInstances[fontName..setsize]
+			setfont = font.load(lv1lua.dataloc.."game/"..fontName)
 		end
+		guineaPig = font.load(lv1lua.dataloc.."game/"..fontName)
+		local nFont = {
+			name = fontName;
+			font = setfont;
+			guineaPig = guineaPig;
+			size = setsize;
+		}
+		_loadedFonts:setLoaded(fontName, nFont)
+		function nFont:getWidth(text)
+			return screen.textwidth(self.guineaPig, text, self.size / 18.5)
+		end
+		function nFont:getHeight()
+			return screen.textheight(self.guineaPig, self.size)
+		end
+		return nFont
+	else
+		return _loadedFonts.fontInstances[fontName..setsize]
 	end
-		
 end
 
 function love.graphics.setFont(setfont,setsize)
-	if not lv1lua.isPSP and setfont then
-		lv1lua.current.font = setfont
-	else
-		lv1lua.current.font = defaultfont
-	end
-	
+	lv1lua.current.font = setfont
 	if setsize then
 		lv1lua.current.font.size = setsize
 	end
@@ -446,10 +432,10 @@ function love.graphics._defaultPrint(text, x, y, fontsize)
 	if not y then y = 0 end
 	fontsize = ((fontsize == nil) and lv1lua.current.font.size/18.5 or fontsize)
 	
-	--scale 1280x720 to 960x540(vita) or 480x270(psp)
+	--scale 1280x720 to 960x540(vita)
 	if lv1luaconf.imgscale == true or lv1luaconf.resscale == true then
 		x = x * scale; y = y * scale
-		fontsize = fontsize*fontscale
+		fontsize = fontsize * scale
 	end
 	
 	screen.print(lv1lua.current.font.font,x,y,text,fontsize,lv1lua.current.color)
@@ -585,7 +571,7 @@ function love.graphics.setBackgroundColor(r,g,b)
 end
 
 function love.graphics.rectangle(mode, x, y, w, h)
-	--scale 1280x720 to 960x540(vita) or 480x270(psp)
+	--scale 1280x720 to 960x540(vita)
 	if lv1luaconf.imgscale == true or lv1luaconf.resscale == true then
 		x = x * scale; y = y * scale; w = w * scale; h = h * scale
 	end

@@ -65,8 +65,10 @@ function lv1lua.updatecontrols()
 		end
 	end
 	__checkGameRestart()
-	___updateFrontTouch()
-	-- __checkHomePress()
+	if not lv1lua.isPSP then
+		___updateFrontTouch()
+		-- __checkHomePress()
+	end
 end
 
 function __checkGameRestart()
