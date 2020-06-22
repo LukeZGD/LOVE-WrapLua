@@ -23,8 +23,17 @@ love.keyboard = {}
 
 --for checking conf files
 function lv1lua.exists(file)
-	local f = io.open(file, "r")
-	if f ~= nil then io.close(f) return true else return false end
+	if lv1lua.mode == "OneLua" then
+		return files.exists(file)
+	elseif lv1lua.mode == "lpp-vita" then
+		return System.doesFileExist(file) or System.doesDirExist(file)
+	else
+		local openfile = io.open(file, "r")
+		if openfile then
+			openfile:close()
+			return true
+		end
+	end
 end
 
 --love conf, custom configs go to game/conf.lua
@@ -76,7 +85,6 @@ end
 
 --modules and stuff
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/whileloop.lua")
-
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/graphics.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/timer.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/audio.lua")

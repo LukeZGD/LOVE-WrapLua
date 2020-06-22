@@ -13,9 +13,7 @@ function love.keyboard.isDown(key)
 		(pad.L1(0)>0 and key==lv1lua.keyset[5]) or (pad.R1(0)>0 and key==lv1lua.keyset[6]) or
 		(pad.select(0)>0 and key=="select") or (pad.start(0)>0 and key=="start") then
 		return true
-	else
-		return false
-	end	
+	end
 end
 
 function love.keyboard.showTextInput(table)
