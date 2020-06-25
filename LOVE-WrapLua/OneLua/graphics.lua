@@ -376,15 +376,10 @@ end
 --Too much text in just graphics.lua, considering in split graphics.lua in many modules
 
 function love.graphics.newFont(setfont, setsize)
-	if not setfont then
-		setsize = 12
+	if not setfont or tonumber(setfont) then
 		setfont = defaultfont
-	elseif tonumber(setfont) then
-		setsize = setfont
-		setfont = defaultfont
-	elseif not setsize then
-		setsize = 12
 	end
+	setsize = setsize or 12
 	local fontName = setfont
 	--For the currently OneLua ver, there must be one guinea pig for screen.textwidth, as using it on the current font may
 	--Cause it to blur
@@ -393,10 +388,11 @@ function love.graphics.newFont(setfont, setsize)
 	if(not _loadedFonts:hasLoaded(fontName, setsize)) then
 		if fontName == defaultfont then
 			setfont = font.load(defaultfont)
+			guineaPig = font.load(defaultfont)
 		else
 			setfont = font.load(lv1lua.dataloc.."game/"..fontName)
+			guineaPig = font.load(lv1lua.dataloc.."game/"..fontName)
 		end
-		guineaPig = font.load(lv1lua.dataloc.."game/"..fontName)
 		local nFont = {
 			name = fontName;
 			font = setfont;
