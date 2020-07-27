@@ -6,9 +6,9 @@ gtimer:start()
 dt = 0
 
 function love.timer.getTime()
-	return gtimer:time() / 1000
+    return gtimer:time() / 1000
 end
 
 function love.timer.getDelta()
-	return dt
+    return dt
 end

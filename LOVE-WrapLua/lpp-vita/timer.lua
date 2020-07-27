@@ -4,9 +4,9 @@ local gtimer = Timer.new()
 dt = 0
 
 function love.timer.getTime()
-	return Timer.getTime(gtimer) / 1000
+    return Timer.getTime(gtimer) / 1000
 end
 
 function love.timer.getDelta()
-	return dt
+    return dt
 end
