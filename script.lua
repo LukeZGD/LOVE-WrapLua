@@ -56,7 +56,7 @@ t = nil
 if not lv1luaconf then
     --lv1luaconf, custom configs should go to lv1lua.lua
     lv1luaconf = {
-        keyconf = "SE",
+        keyconf = "XB",
         img_scale = false,
         res_scale = false
     }
@@ -70,15 +70,22 @@ if lv1luaconf.keyconf == "SE" then
         if Controls.getEnterButton() == SCE_CTRL_CIRCLE then lv1lua.confirm = true end
     elseif lv1lua.mode == "OneLua" then
         if buttons.assign() == 0 then lv1lua.confirm = true end
-        dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/touch.lua")
-        dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/mouse.lua")
+        if not lv1lua.isPSP then
+            dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/touch.lua")
+            dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/mouse.lua")
+        end
     end
-    
     if not lv1lua.confirm then
-        lv1lua.keyset = {"b","a","y","x","leftshoulder","rightshoulder"}
+        lv1luaconf.keyconf = "XB"
     else
-        lv1lua.keyset = {"a","b","x","y","leftshoulder","rightshoulder"}
+        lv1luaconf.keyconf = "XBA"
     end
+end
+
+if lv1luaconf.keyconf == "XB" then
+    lv1lua.keyset = {"b","a","y","x","leftshoulder","rightshoulder"}
+elseif lv1luaconf.keyconf == "XBA" then
+    lv1lua.keyset = {"a","b","x","y","leftshoulder","rightshoulder"}
 elseif lv1luaconf.keyconf == "PS" then
     lv1lua.keyset = {"circle","cross","triangle","square","l","r"}
 end
