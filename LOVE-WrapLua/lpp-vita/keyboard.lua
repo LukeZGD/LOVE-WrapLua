@@ -19,7 +19,7 @@ function love.keyboard.showTextInput(table)
         local header = {"",""}
         if table["header"] then header[1] = table["header"] end
         if table["subheader"] then header[2] = table["subheader"] end
-        Keyboard.show(header[1],header[2])
+        Keyboard.start(header[1],header[2])
         if Keyboard.getState() == FINISHED then
             local text = Keyboard.getInput()
             if text and text ~= "" then love.textinput(text) end
