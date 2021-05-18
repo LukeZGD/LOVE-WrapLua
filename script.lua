@@ -70,10 +70,6 @@ if lv1luaconf.keyconf == "SE" then
         if Controls.getEnterButton() == SCE_CTRL_CIRCLE then lv1lua.confirm = true end
     elseif lv1lua.mode == "OneLua" then
         if buttons.assign() == 0 then lv1lua.confirm = true end
-        if not lv1lua.isPSP then
-            dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/touch.lua")
-            dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/mouse.lua")
-        end
     end
     if not lv1lua.confirm then
         lv1luaconf.keyconf = "XB"
