@@ -1,7 +1,7 @@
 if lv1lua.isPSP then
     lv1lua.saveloc = "ms0:/PSP/GAME/"..lv1lua.loveconf.identity.."/savedata/"
 elseif lv1lua.mode == "PS3" then
-    lv1lua.saveloc = lv1lua.dataloc.."/savedata/"
+    lv1lua.saveloc = lv1lua.dataloc.."savedata/"
 else
     lv1lua.saveloc = "ux0:/data/"..lv1lua.loveconf.identity.."/savedata/"
 end
@@ -34,7 +34,13 @@ function love.filesystem.read(file)
 end
 
 function love.filesystem.write(file,datawrite)
-    local openfile = io.open(lv1lua.saveloc..file, "w")
+    local writetype
+    if lv1lua.mode == "PS3" then
+        writetype = "w+"
+    else
+        writetype = "w"
+    end
+    local openfile = io.open(lv1lua.saveloc..file, writetype)
     local success = openfile:write(datawrite)
     openfile:close()
     return success
@@ -42,7 +48,7 @@ end
 
 function love.filesystem.append(file,datawrite)
     local openfile = io.open(lv1lua.saveloc..file, "a")
-    local success = openfile:write(datawrite)
+    local success = openfile:write(datawrite.."\n")
     openfile:close()
     return success
 end

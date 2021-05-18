@@ -86,6 +86,12 @@ function love.graphics.setFont(setfont,setsize)
     lv1lua.current.font = setfont
 end
 
+function love.graphics.setNewFont(setfont,setsize)
+    newfont = love.graphics.newFont(setfont, setsize)
+    love.graphics.setFont(newfont, setsize)
+    return newfont
+end
+
 function love.graphics.print(text,x,y)
     if not x then x = 0 end
     if not y then y = 0 end

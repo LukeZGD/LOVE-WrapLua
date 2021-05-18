@@ -110,10 +110,20 @@ function love.getVersion()
     return 0, 10, 2
 end
 
---require replacement correctly working now
-__oldRequire = require
-function require(param)
-    return __oldRequire("game/"..param)
+if lv1lua.mode == "OneLua" then
+    __oldRequire = require
+    function require(param)
+        return __oldRequire("game/"..param)
+    end
+else
+    function require(param)
+        if string.sub(param, -4) == ".lua" then
+            param = lv1lua.dataloc.."game/"..param
+        else
+            param = lv1lua.dataloc.."game/"..param..".lua"
+        end
+        return dofile(param)
+    end
 end
 
 --START!

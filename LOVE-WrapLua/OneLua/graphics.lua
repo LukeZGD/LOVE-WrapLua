@@ -420,7 +420,9 @@ function love.graphics.setFont(setfont,setsize)
 end
 
 function love.graphics.setNewFont(setfont,setsize)
-    love.graphics.setFont(love.graphics.newFont(setfont, setsize), setsize)
+    newfont = love.graphics.newFont(setfont, setsize)
+    love.graphics.setFont(newfont, setsize)
+    return newfont
 end
 
 function love.graphics._defaultPrint(text, x, y, fontsize)

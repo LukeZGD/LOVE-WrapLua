@@ -17,11 +17,7 @@ function love.audio.newSource(source,sourcetype)
             if self.loadsound then Sound.setVolume(self.loadsound,vol*32767) end;
         end;
         setLooping = function(self,setloop)
-            if setloop then
-                self.loop = LOOP
-            else
-                self.loop = NO_LOOP
-            end
+            self.loop = setloop
         end;
         isPlaying = function(self)
             if self.loadsound then return Sound.isPlaying(self.loadsound) end;
@@ -35,12 +31,12 @@ end
 
 function love.audio.play(source)
     if not source.loop then
-        source.loop = NO_LOOP
+        source.loop = false
     end
     Sound.play(source.loadsound,source.loop)
 end
 
 function love.audio.stop(source)
     Sound.pause(source.loadsound)
-    --Sound.close(source.loadsound)
+    Sound.close(source.loadsound)
 end
