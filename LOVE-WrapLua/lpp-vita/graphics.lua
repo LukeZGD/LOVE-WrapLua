@@ -22,11 +22,9 @@ function love.graphics.draw(drawable,x,y,r,sx,sy)
     if not sy then sy = 1 end
     if sx and not sy then sy = sx end
     
-    --scale 1280x720 to 960x540(vita) or 480x270(psp)
-    if not lv1lua.isPSP and (lv1luaconf.imgscale == true or lv1luaconf.resscale == true) then
+    --scale 1280x720 to 960x540(vita)
+    if lv1luaconf.imgscale == true or lv1luaconf.resscale == true then
         x = x * 0.75; y = y * 0.75
-    elseif lv1lua.isPSP and lv1luaconf.resscale == true then
-        x = x * 0.375; y = y * 0.375
     end
     --[[
     if r then
@@ -37,7 +35,7 @@ function love.graphics.draw(drawable,x,y,r,sx,sy)
         image.resize(drawable,image.getrealw(drawable)*sx,image.getrealh(drawable)*sy)
     end
     ]]
-    if not lv1lua.isPSP and lv1luaconf.imgscale == true then
+    if lv1luaconf.imgscale == true then
         sx = sx * 0.75
         sy = sy * 0.75
     end
@@ -64,7 +62,7 @@ function love.graphics.newFont(setfont, setsize)
         setsize = 12
     end
     
-    if tonumber(setfont) or lv1lua.isPSP then
+    if tonumber(setfont) then
         setfont = defaultfont
     elseif setfont then
         setfont = Font.load(lv1lua.dataloc.."game/"..setfont)
