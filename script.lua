@@ -2,13 +2,7 @@
 if not lv1lua then
     lv1lua = {}
 end
-lv1lua.isPSP = os.cfw
 lv1lua.running = true
-
-if not lv1lua.mode then
-    lv1lua.dataloc = ""
-    lv1lua.mode = "OneLua"
-end
 
 --set up love
 love = {}
@@ -23,17 +17,7 @@ love.keyboard = {}
 
 --for checking conf files
 function lv1lua.exists(file)
-    if lv1lua.mode == "OneLua" then
-        return files.exists(file)
-    elseif lv1lua.mode == "lpp-vita" then
-        return System.doesFileExist(file) or System.doesDirExist(file)
-    else
-        local openfile = io.open(file, "r")
-        if openfile then
-            openfile:close()
-            return true
-        end
-    end
+    return System.doesFileExist(file) or System.doesDirExist(file)
 end
 
 --love conf, custom configs go to game/conf.lua
@@ -66,15 +50,7 @@ end
 if lv1luaconf.keyconf == "SE" then
     lv1lua.confirm = false
     
-    if lv1lua.mode == "lpp-vita" then
-        if Controls.getEnterButton() == SCE_CTRL_CIRCLE then lv1lua.confirm = true end
-    elseif lv1lua.mode == "OneLua" then
-        if buttons.assign() == 0 then lv1lua.confirm = true end
-        if not lv1lua.isPSP then
-            dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/touch.lua")
-            dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/mouse.lua")
-        end
-    end
+    if Controls.getEnterButton() == SCE_CTRL_CIRCLE then lv1lua.confirm = true end
     if not lv1lua.confirm then
         lv1luaconf.keyconf = "XB"
     else
@@ -91,11 +67,7 @@ elseif lv1luaconf.keyconf == "PS" then
 end
 
 --modules and stuff
-if lv1lua.isPSP then
-    dofile(lv1lua.dataloc.."LOVE-WrapLua/OneLua/graphics_psp.lua")
-else
-    dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/graphics.lua")
-end
+dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/graphics.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/whileloop.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/timer.lua")
 dofile(lv1lua.dataloc.."LOVE-WrapLua/"..lv1lua.mode.."/audio.lua")
@@ -110,20 +82,13 @@ function love.getVersion()
     return 0, 10, 2
 end
 
-if lv1lua.mode == "OneLua" then
-    __oldRequire = require
-    function require(param)
-        return __oldRequire("game/"..param)
+function require(param)
+    if string.sub(param, -4) == ".lua" then
+        param = lv1lua.dataloc.."game/"..param
+    else
+        param = lv1lua.dataloc.."game/"..param..".lua"
     end
-else
-    function require(param)
-        if string.sub(param, -4) == ".lua" then
-            param = lv1lua.dataloc.."game/"..param
-        else
-            param = lv1lua.dataloc.."game/"..param..".lua"
-        end
-        return dofile(param)
-    end
+    return dofile(param)
 end
 
 --START!
