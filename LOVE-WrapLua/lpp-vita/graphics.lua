@@ -3,15 +3,15 @@ local defaultfont = Font.load(lv1lua.dataloc.."LOVE-WrapLua/Vera.ttf")
 Font.setPixelSizes(defaultfont,12)
 
 --set up stuff
-lv1lua.current = {font=defaultfont,color=Color.new(255,255,255,255)}
+lv1lua.current = {
+    font = defaultfont,
+    color = Color.new(255,255,255,255),
+    bgcolor=Color.new(0,0,0,255)
+}
 
 function love.graphics.newImage(filename)
     local img = Graphics.loadImage(lv1lua.dataloc.."game/"..filename)
     return img
-end
-
-function lv1lua.freeImage(img)
-    Graphics.freeImage(img)
 end
 
 function love.graphics.draw(drawable,x,y,r,sx,sy)
@@ -26,22 +26,13 @@ function love.graphics.draw(drawable,x,y,r,sx,sy)
     if lv1luaconf.imgscale == true or lv1luaconf.resscale == true then
         x = x * 0.75; y = y * 0.75
     end
-    --[[
-    if r then
-        image.rotate(drawable,(r/math.pi)*180) --radians to degrees
-    end
     
-    if sx or sy then
-        image.resize(drawable,image.getrealw(drawable)*sx,image.getrealh(drawable)*sy)
-    end
-    ]]
     if lv1luaconf.imgscale == true then
         sx = sx * 0.75
         sy = sy * 0.75
     end
     
     if drawable then
-        --image.blit(drawable,x,y,color.a(lv1lua.current.color))
         Graphics.drawScaleImage(x,y,drawable,sx,sy,lv1lua.current.color)
         --[[
         Graphics.drawImageExtended(
@@ -110,7 +101,7 @@ function love.graphics.setColor(r,g,b,a)
 end
 
 function love.graphics.setBackgroundColor(r,g,b)
-    --Screen.clear(Color.new(r,g,b))
+    lv1lua.current.bgcolor = Color.new(r,g,b,255)
 end
 
 function love.graphics.rectangle(mode, x, y, w, h)

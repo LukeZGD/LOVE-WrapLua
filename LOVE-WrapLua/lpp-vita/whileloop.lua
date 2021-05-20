@@ -1,7 +1,11 @@
 function lv1lua.draw()
     Graphics.initBlend()
     Screen.clear()
-    if love.draw then love.draw() end
+    Graphics.fillRect(0, 960, 0, 544, lv1lua.current.bgcolor)
+    if love.draw then
+        love.draw()
+    end
+    Graphics.fillRect(0, 960, 540, 544, Color.new(0,0,0,255))
     Graphics.termBlend()
     Screen.flip()
 end
